@@ -1,0 +1,11 @@
+# Editor directories and files
+.idea
+.vscode
+Distributed-Systems-Project.iml
+Server.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.class
+*.iml
