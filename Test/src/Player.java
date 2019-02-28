@@ -12,7 +12,8 @@ public class Player {
         String host = (args.length < 1) ? null : args[0];
         try {
             // Registry registry = LocateRegistry.getRegistry(host);
-            ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://" + host + "/connection");
+            // ConnectionInterface stub = (ConnectionInterface) registry.lookup("connection");
+            ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
             String response = stub.connect(ip);
             System.out.println("response: " + response);
         } catch (Exception e) {

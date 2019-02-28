@@ -7,7 +7,7 @@ import java.util.*;
 
 public class ServerForStart implements ConnectionInterface{
     private static Utility utility = new Utility();
-    static ArrayList<String> listIp = null;
+    public ArrayList<String> listIp = new ArrayList<>();
     public ServerForStart() {
     }
     // findIp()
@@ -29,7 +29,7 @@ public class ServerForStart implements ConnectionInterface{
             // Bind the remote object's stub in the registry
             // Registry registry = LocateRegistry.getRegistry();
             // registry.bind("connection", stub);
-            Naming.rebind("rmi://" + ip + "/connection", stub);
+            Naming.rebind("rmi://"+ip+"/connection", stub);
 
 
             System.err.println("Server ready");
