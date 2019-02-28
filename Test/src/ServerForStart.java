@@ -11,13 +11,21 @@ public class ServerForStart implements ConnectionInterface{
     public ServerForStart() {
     }
     // findIp()
-    public String connect(String ip) {
+    public String connect(String ipPlayer) {
         System.out.println("sei dentro connect");
-        listIp.add(ip);
+        listIp.add(ipPlayer);
         for(int i = 0; i < listIp.size(); i++){
             System.out.println(listIp.get(i));
         }
-        return "Ti sei connesso: "+ip;
+        try {
+            PlayerInterface stub = (PlayerInterface) Naming.lookup("rmi://"+ipPlayer+"/getAllIp");
+            stub.getIp(ipPlayer);
+            System.out.println("Ho chiamato la getIp su Player");
+        } catch (Exception e) {
+            System.err.println("Server exception: " + e.toString());
+            e.printStackTrace();
+        }
+        return "ti sei connesso e ti ho mandato gli ip";
     }
     public static void main (String[] args) throws Exception{
         String ip = utility.findIp();
