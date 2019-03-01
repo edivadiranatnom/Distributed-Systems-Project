@@ -23,7 +23,7 @@ public class Player{
         // server service
         try {
             Client = new ClientFunctions();
-            Naming.rebind("rmi://"+ip+"/getAllIp", Client);
+            Naming.rebind("rmi://"+ip+"/ciao", Client);
 
             System.err.println("Ready for Ips...");
         } catch (Exception e) {
