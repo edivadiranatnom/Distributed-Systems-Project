@@ -5,45 +5,41 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class ServerForStart implements ConnectionInterface{
+public class ServerForStart{
     private static Utility utility = new Utility();
-    public ArrayList<String> listIp = new ArrayList<>();
+    public static Connection StartRMI;
     public ServerForStart() {
     }
-    // findIp()
-    public String connect(String ipPlayer) {
-        System.out.println("sei dentro connect");
-        listIp.add(ipPlayer);
-        for(int i = 0; i < listIp.size(); i++){
-            System.out.println(listIp.get(i));
-        }
-        try {
-            PlayerInterface stub = (PlayerInterface) Naming.lookup("rmi://"+ipPlayer+"/getAllIp");
-            stub.getIp(ipPlayer);
-            System.out.println("Ho chiamato la getIp su Player");
-        } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
-            e.printStackTrace();
-        }
-        return "ti sei connesso e ti ho mandato gli ip";
-    }
+
     public static void main (String[] args) throws Exception{
         String ip = utility.findIp();
         System.out.println("Server For Start ip is: "+ip);
+        System.setProperty("java.rmi.server.hostname", ip);
         try {
-            ServerForStart obj = new ServerForStart();
-            ConnectionInterface stub = (ConnectionInterface) UnicastRemoteObject.exportObject(obj, 0);
+            LocateRegistry.createRegistry(1099);
+        } catch (RemoteException e) {
+            LocateRegistry.getRegistry(1099).list();
+            System.out.println("rmiregistry already started");
+        }
+        try {
+            //ServerForStart obj = new ServerForStart();
+            // ConnectionInterface stub = (ConnectionInterface) UnicastRemoteObject.exportObject(obj, 0);
 
             // Bind the remote object's stub in the registry
             // Registry registry = LocateRegistry.getRegistry();
             // registry.bind("connection", stub);
-            Naming.rebind("rmi://"+ip+"/connection", stub);
 
+            //
+            StartRMI = new Connection();
+            Naming.rebind("rmi://"+ip+"/connection", StartRMI);
 
             System.err.println("Server ready");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
         }
+        // broadcast
+        // appena raggiungo il limite faccio questa chiamata su TUTTI i CLIENT.
+
     }
 }
