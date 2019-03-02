@@ -1,5 +1,6 @@
 import java.rmi.Remote;
+import java.util.ArrayList;
 
 public interface PlayerInterface extends Remote {
-    void getIp (String ip) throws Exception;
+    void getIp (ArrayList<String> ip) throws Exception;
 }
