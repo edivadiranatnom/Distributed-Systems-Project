@@ -1,3 +1,4 @@
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -9,9 +10,14 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
     public void getIp(ArrayList<String> ipPlayers) {
         for (int i=0; i<ipPlayers.size(); i++) {
-            System.out.println("Ho ricevuto ip: " + ipPlayers.get(i));
             listIpPlayer.add(ipPlayers.get(i));
             System.out.println("Ho pushato ip: " + ipPlayers.get(i));
+        }
+    }
+
+    public void ping(){
+        for (int i=0; i<listIpPlayer.size(); i++) {
+            System.out.println("Ping: " + listIpPlayer.get(i)+"\n");
         }
     }
 

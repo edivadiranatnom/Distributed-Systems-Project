@@ -19,6 +19,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
                 PlayerInterface stub = (PlayerInterface) Naming.lookup("rmi://" + listIp.get(i) + "/ciao");
                 stub.getIp(listIp);
                 System.out.println("Ho chiamato la getIp su Player: "+ listIp.get(i));
+                stub.ping();
             }
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());

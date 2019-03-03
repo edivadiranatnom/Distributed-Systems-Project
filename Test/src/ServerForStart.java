@@ -22,14 +22,6 @@ public class ServerForStart{
             System.out.println("rmiregistry already started");
         }
         try {
-            //ServerForStart obj = new ServerForStart();
-            // ConnectionInterface stub = (ConnectionInterface) UnicastRemoteObject.exportObject(obj, 0);
-
-            // Bind the remote object's stub in the registry
-            // Registry registry = LocateRegistry.getRegistry();
-            // registry.bind("connection", stub);
-
-            //
             StartRMI = new Connection();
             Naming.rebind("rmi://"+ip+"/connection", StartRMI);
 
