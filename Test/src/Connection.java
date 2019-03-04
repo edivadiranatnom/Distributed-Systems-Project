@@ -25,7 +25,9 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             listIp.add(ipPlayer);
             max = true;
         }
-        listIp.add(ipPlayer);
+        else {
+            listIp.add(ipPlayer);
+        }
         for(int i = 0; i < listIp.size(); i++){
             System.out.println("Player :"+i+" :"+listIp.get(i));
         }
