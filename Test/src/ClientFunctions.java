@@ -9,6 +9,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         super();
     }
     public void getIp(ArrayList<String> ipPlayers) {
+        listIpPlayer.clear();
         for (int i=0; i<ipPlayers.size(); i++) {
             listIpPlayer.add(ipPlayers.get(i));
             System.out.println("Ho pushato ip: " + ipPlayers.get(i));
