@@ -4,6 +4,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import static java.lang.Integer.parseInt;
 
 public class ServerForStart{
     private static Utility utility = new Utility();
@@ -12,6 +13,12 @@ public class ServerForStart{
     }
 
     public static void main (String[] args) throws Exception{
+        // TODO: Try and catch --> Number Format Exception.
+        int numHostMax = parseInt(args[0]);
+        if (numHostMax < 3 || numHostMax > 8) {
+            System.out.println("Numero massimo di giocatori: 8\n Numero minimo di giocatori: 3");
+            System.exit(1);
+        }
         String ip = utility.findIp();
         System.out.println("Server For Start ip is: "+ip);
         System.setProperty("java.rmi.server.hostname", ip);
@@ -22,7 +29,7 @@ public class ServerForStart{
             System.out.println("rmiregistry already started");
         }
         try {
-            StartRMI = new Connection();
+            StartRMI = new Connection(numHostMax);
             Naming.rebind("rmi://"+ip+"/connection", StartRMI);
 
             System.err.println("Server ready");

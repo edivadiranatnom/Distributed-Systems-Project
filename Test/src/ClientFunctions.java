@@ -20,6 +20,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         for (int i=0; i<listIpPlayer.size(); i++) {
             System.out.println("Ping: " + listIpPlayer.get(i)+"\n");
         }
+        System.out.println("Ready to play");
     }
 
 }
