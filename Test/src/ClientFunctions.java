@@ -14,6 +14,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             listIpPlayer.add(ipPlayers.get(i));
             System.out.println("Ho pushato ip: " + ipPlayers.get(i));
         }
+        System.out.println("-------------------------");
     }
 
     public void ping(){

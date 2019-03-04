@@ -41,7 +41,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             }
             if (max) {
                 System.out.println("Chiusura Server For Start");
-                System.exit(1);
+                return "Se l'ultimo. Connesso e ricevuto gli Ip.";
             }
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
