@@ -1,5 +1,6 @@
 import java.rmi.Remote;
 
 public interface ConnectionInterface extends Remote {
-    void connect (String ip) throws Exception;
+    int connect (String ip) throws Exception;
+    void kill () throws  Exception;
 }

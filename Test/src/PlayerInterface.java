@@ -4,4 +4,5 @@ import java.util.ArrayList;
 public interface PlayerInterface extends Remote {
     void getIp (ArrayList<String> ip) throws Exception;
     void ping () throws Exception;
+    void ringComunicaition(int param) throws Exception;
 }

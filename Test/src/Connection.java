@@ -14,7 +14,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
     public static void foo () {
 
     }
-    public void connect(String ipPlayer) {
+    public int connect(String ipPlayer) {
         System.out.println("sei dentro connect");
         if (listIp.size() == hostMax) {
             // Non so se ci entrerà mai
@@ -43,14 +43,16 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             }
             if (max) {
                 System.out.println("Chiusura Server For Start");
-                System.exit(0);
-                // return "Sei l'ultimo. Connesso e ricevuto gli Ip.";
+                return -1;
             }
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
         }
-        //return "ti sei connesso e ti ho mandato gli ip";
+        return 1;
+    }
+    public void kill() {
+        System.exit(0);
     }
 
 }
