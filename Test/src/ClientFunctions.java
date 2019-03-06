@@ -5,8 +5,9 @@ import java.util.*;
 
 public class ClientFunctions extends UnicastRemoteObject implements PlayerInterface {
     public ArrayList<String> listIpPlayer = new ArrayList<>();
-    public static boolean pinged = false;
     private static Utility utility = new Utility();
+    public String leader;
+    public boolean iamleader = false;
     public ClientFunctions() throws RemoteException {
         super();
     }
@@ -25,21 +26,28 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
         System.out.println("Ready to play");
     }
+    public void electionLeader(String leader) {
+        System.out.println("il leader è: "+leader);
+        this.leader = leader;
+        // controlla il leader. se sono io setto la var iamleader a true.
+    }
+
+    // dopo morte server for start
+
     public void ringComunicaition(int a) throws Exception {
         String ip = utility.findIp();
         a=a+1;
         System.out.println(a);
         int miaPos = listIpPlayer.indexOf(ip);
-        int pos;
-        if (miaPos == (listIpPlayer.size()-1)) {
-            pos = 0;
-        } else {
-            pos = miaPos+1;
-        }
+        int pos = miaPos+1;
+        // if (miaPos == (listIpPlayer.size()-1)) {
+           // pos = 0;
+        //} else {
+         //   pos = miaPos+1;
+        //}
         if (miaPos != (listIpPlayer.size()-1)) {
             PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(pos) + "/ciao");
             stubPlayer.ringComunicaition(a);
-            pinged = true;
         }
     }
 

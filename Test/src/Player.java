@@ -41,7 +41,7 @@ public class Player{
             ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
             int response = stub.connect(ip);
             if (response == -1) {
-                ReadyForPlay = true;
+                //ReadyForPlay = true;
                 listIpPlayer = Client.listIpPlayer;
                 try {
                     stub.kill();
