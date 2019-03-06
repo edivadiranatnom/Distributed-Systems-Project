@@ -35,7 +35,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         } else {
             pos = miaPos+1;
         }
-        if (!pinged) {
+        if (miaPos != (listIpPlayer.size()-1)) {
             PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(pos) + "/ciao");
             stubPlayer.ringComunicaition(a);
             pinged = true;
