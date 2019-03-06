@@ -8,6 +8,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     private static Utility utility = new Utility();
     public String leader;
     public boolean iamleader = false;
+
     public ClientFunctions() throws RemoteException {
         super();
     }
@@ -26,10 +27,14 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
         System.out.println("Ready to play");
     }
-    public void electionLeader(String leader) {
-        System.out.println("il leader è: "+leader);
+    public void electionLeader(String leader) throws Exception{
         this.leader = leader;
-        // controlla il leader. se sono io setto la var iamleader a true.
+        if ((utility.findIp()).equals(leader)){
+            System.out.println("io sono il leader: "+leader);
+            this.iamleader = true;
+        } else {
+            System.out.println("il leader è: "+leader);
+        }
     }
 
     // dopo morte server for start

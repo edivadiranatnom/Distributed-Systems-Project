@@ -24,7 +24,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             max = true;
             Random rand = new Random();
             this.random = rand.nextInt(listIp.size());
-
+            System.out.println("il leader è in posizione "+random+", cioè è :"+listIp.get(random));
         }
         else {
             listIp.add(ipPlayer);
@@ -39,7 +39,6 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
                 System.out.println("Ho chiamato la getIp su Player: "+ listIp.get(i));
                 // function ping in Server for start at the end.
                 if (max) {
-                    System.out.println("il leader è in posizione "+random+", cioè è :"+listIp.get(random));
                     // stub.ping();
                     stub.electionLeader(listIp.get(random));
                 }
