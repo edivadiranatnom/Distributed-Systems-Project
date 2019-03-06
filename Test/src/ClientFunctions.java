@@ -27,7 +27,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
     public void ringComunicaition(int a) throws Exception {
         String ip = utility.findIp();
-        System.out.println(a+1);
+        a=a+1;
+        System.out.println(a);
         int miaPos = listIpPlayer.indexOf(ip);
         int pos;
         if (miaPos == (listIpPlayer.size()-1)) {
