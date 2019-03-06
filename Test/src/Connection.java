@@ -6,13 +6,11 @@ import java.util.*;
 public class Connection extends UnicastRemoteObject implements ConnectionInterface {
     private int hostMax;
     public boolean max = false;
+    private int random;
     public static ArrayList<String> listIp = new ArrayList<>();
     public Connection(int numHostMax) throws RemoteException {
         super();
         this.hostMax = numHostMax;
-    }
-    public static void foo () {
-
     }
     public int connect(String ipPlayer) {
         System.out.println("sei dentro connect");
@@ -24,6 +22,9 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             System.out.println("Sei l'ultimo Player!");
             listIp.add(ipPlayer);
             max = true;
+            Random rand = new Random();
+            this.random = rand.nextInt(listIp.size());
+
         }
         else {
             listIp.add(ipPlayer);
@@ -38,11 +39,9 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
                 System.out.println("Ho chiamato la getIp su Player: "+ listIp.get(i));
                 // function ping in Server for start at the end.
                 if (max) {
-                    Random rand = new Random();
-                    int n = rand.nextInt(listIp.size());
-                    System.out.println("il leader è in posizione "+n+", cioè è :"+listIp.get(n));
+                    System.out.println("il leader è in posizione "+random+", cioè è :"+listIp.get(random));
                     // stub.ping();
-                    stub.electionLeader(listIp.get(n));
+                    stub.electionLeader(listIp.get(random));
                 }
             }
             if (max) {
