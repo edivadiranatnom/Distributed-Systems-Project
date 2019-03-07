@@ -1,19 +1,17 @@
 package UnoGame;
-
 import java.util.*;
 
-public class UnoGame {
-    public static Deck mazzo;
-    public UnoGame() {
-        mazzo = new Deck();
-    }
+public class Game {
+    public Deck mazzo = new Deck();
+    public Game(){}
+
     public void stampa () {
-        System.out.println("lunghezza del deck"+mazzo.carddeck.length);
-        for (int i = 0; i < mazzo.carddeck.length; i++) {
-            System.out.println(""+mazzo.carddeck[i].card+", "+mazzo.carddeck[i].color);
+        for (int i = 0; i< mazzo.carddeck.length; i++) {
+            System.out.println(mazzo.carddeck[i].card+" "+mazzo.carddeck[i].color+"\n");
         }
     }
-    public static Card[] shuffle(){
+    // potrei farla anche void
+    public Deck shuffle(){
         Random rgen = new Random();
 
         for (int i=0; i<mazzo.carddeck.length; i++) {
@@ -23,6 +21,6 @@ public class UnoGame {
             mazzo.carddeck[randomPosition] = temp;
         }
 
-        return mazzo.carddeck;
+        return mazzo;
     }
 }

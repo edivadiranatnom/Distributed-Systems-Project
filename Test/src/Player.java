@@ -1,3 +1,6 @@
+import UnoGame.Game;
+import UnoGame.*;
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -41,7 +44,7 @@ public class Player{
             ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
             int response = stub.connect(ip);
             if (response == -1) {
-                //ReadyForPlay = true;
+                ReadyForPlay = true;
                 listIpPlayer = Client.listIpPlayer;
                 try {
                     stub.kill();
@@ -58,9 +61,12 @@ public class Player{
                 } else {
                     pos = miaPos+1;
                 }
+                Game uno = new Game();
+                Deck deck = uno.shuffle();
                 System.out.println("sono in posizione "+miaPos+". Devo richiamare il client in pos: "+(pos));
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + Client.listIpPlayer.get(pos) + "/ciao");
-                stubPlayer.ringComunicaition(paramToDelete);
+                stubPlayer.testDistribution(deck);
+
             }
             //System.out.println("response: " + response);
         } catch (Exception e) {
