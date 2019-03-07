@@ -36,9 +36,17 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             //
             int miaPos = listIpPlayer.indexOf(leader);
             int pos;
+            // se sono alla fine
             if (miaPos == (listIpPlayer.size()-1)) {
                 pos = 0;
                 for (int i = pos; i < listIpPlayer.size()-1; i++) {
+                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
+                    stubPlayer.testDistribution(deck);
+                }
+            // sono all'inizio
+            } else if (miaPos == 0){
+                pos = miaPos+1;
+                for (int i = pos; pos < listIpPlayer.size(); i++) {
                     PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
                     stubPlayer.testDistribution(deck);
                 }
