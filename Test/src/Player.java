@@ -1,4 +1,3 @@
-import UnoGame.Game;
 import UnoGame.*;
 
 import java.rmi.Naming;
@@ -46,11 +45,11 @@ public class Player{
             if (response == -1) {
                 ReadyForPlay = true;
                 listIpPlayer = Client.listIpPlayer;
-                try {
-                    stub.kill();
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
+                // try {
+                    // stub.kill();
+                //} catch (Exception e) {
+                    //System.out.println(e);
+                //}
             }
             // Comunicazione ad anello
             if (ReadyForPlay) {
@@ -64,8 +63,9 @@ public class Player{
                 Game uno = new Game();
                 Deck deck = uno.shuffle();
                 System.out.println("sono in posizione "+miaPos+". Devo richiamare il client in pos: "+(pos));
-                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + Client.listIpPlayer.get(pos) + "/ciao");
+                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://localhost/ciao");
                 stubPlayer.testDistribution(deck);
+
 
             }
             //System.out.println("response: " + response);
