@@ -3,7 +3,7 @@ package UnoGame;
 import java.util.*;
 
 public class UnoGame {
-    public static Deck mazzo;
+    public Deck mazzo;
     public UnoGame() {
         mazzo = new Deck();
     }
@@ -13,7 +13,7 @@ public class UnoGame {
             System.out.println(""+mazzo.carddeck[i].card+", "+mazzo.carddeck[i].color);
         }
     }
-    public static Card[] shuffle(){
+    public Card[] shuffle(){
         Random rgen = new Random();
 
         for (int i=0; i<mazzo.carddeck.length; i++) {
