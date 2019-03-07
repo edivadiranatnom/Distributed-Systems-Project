@@ -62,8 +62,8 @@ public class Player{
                 }
                 Game uno = new Game();
                 Deck deck = uno.shuffle();
-                System.out.println("sono in posizione "+miaPos+". Devo richiamare il client in pos: "+(pos));
-                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://localhost/ciao");
+                System.out.println("sono in posizione "+miaPos);
+                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+Client.listIpPlayer.get(pos)+"/ciao");
                 stubPlayer.testDistribution(deck);
 
 
