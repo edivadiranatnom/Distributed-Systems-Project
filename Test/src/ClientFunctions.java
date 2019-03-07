@@ -29,6 +29,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         int nPlayers = listIpPlayer.size();
         Game uno = new Game();
         Deck deck = uno.shuffle();
+        Deck tmpDeck;
         if ((utility.findIp()).equals(leader)){
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
@@ -36,7 +37,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             int miaPos = listIpPlayer.indexOf(leader);
             for (int i = miaPos; i < nPlayers + miaPos; i++) {
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-                stubPlayer.testDistribution(deck);
+                tmpDeck = stubPlayer.testDistribution(deck);
+                deck = tmpDeck;
             }
         } else {
             System.out.println("il leader è: "+leader);
@@ -62,14 +64,15 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
     }
 
-    public void testDistribution (Deck deck) {
-        System.out.println("Il mio mazzo é:\n");
+    public Deck testDistribution (Deck deck) {
         System.out.println("il deck era lungo: "+deck.carddeck.size());
+        System.out.println("Il mio mazzo é:\n");
         for (int i = 0; i<7; i++){
             MyCard.add(deck.pop());
             System.out.println(MyCard.get(i).card+" "+MyCard.get(i).color+"\n");
         }
         System.out.println("ora deck è lungo: "+deck.carddeck.size());
+        return deck;
     }
 
 }

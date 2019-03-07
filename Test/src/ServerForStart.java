@@ -15,7 +15,7 @@ public class ServerForStart{
     public static void main (String[] args) throws Exception{
         // TODO: Try and catch --> Number Format Exception.
         int numHostMax = parseInt(args[0]);
-        if (numHostMax < 3 || numHostMax > 8) {
+        if (numHostMax < 2 || numHostMax > 8) {
             System.out.println("Numero massimo di giocatori: 8\n Numero minimo di giocatori: 3");
             System.exit(1);
         }
