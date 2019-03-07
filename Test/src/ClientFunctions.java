@@ -36,6 +36,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             this.iamleader = true;
             // circular array
             int miaPos = listIpPlayer.indexOf(leader);
+
+            // TODO: il leader deve ricevere le carte per ultimo.
             for (int i = miaPos; i < nPlayers + miaPos; i++) {
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
                 tmpDeck = stubPlayer.testDistribution(deck);
@@ -46,25 +48,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             }
         } else {
             System.out.println("il leader è: "+leader);
-        }
-    }
-
-    // dopo morte server for start
-
-    public void ringComunicaition(int a) throws Exception {
-        String ip = utility.findIp();
-        a=a+1;
-        System.out.println(a);
-        int miaPos = listIpPlayer.indexOf(ip);
-        int pos = miaPos+1;
-        // if (miaPos == (listIpPlayer.size()-1)) {
-           // pos = 0;
-        //} else {
-         //   pos = miaPos+1;
-        //}
-        if (miaPos != (listIpPlayer.size()-1)) {
-            PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(pos) + "/ciao");
-            stubPlayer.ringComunicaition(a);
         }
     }
 
