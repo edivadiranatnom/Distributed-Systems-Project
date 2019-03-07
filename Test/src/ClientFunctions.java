@@ -34,9 +34,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         if ((utility.findIp()).equals(leader)){
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
-            //
+            // circular array
             int miaPos = listIpPlayer.indexOf(leader);
-            for (int i = miaPos; miaPos < nPlayers + miaPos; i++) {
+            for (int i = miaPos; i < nPlayers + miaPos; i++) {
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
                 stubPlayer.testDistribution(deck);
             }
