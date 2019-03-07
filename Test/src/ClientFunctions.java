@@ -58,7 +58,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             MyCard.add(deck.pop());
             System.out.println(MyCard.get(i).card+" "+MyCard.get(i).color+"\n");
         }
+        System.out.println("-------------------------");
         System.out.println("ora deck è lungo: "+deck.carddeck.size());
+        System.out.println("-------------------------");
         return deck;
     }
 
