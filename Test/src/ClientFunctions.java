@@ -28,6 +28,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
     public void electionLeader(String leader) throws Exception{
         this.leader = leader;
+        int nPlayers = listIpPlayer.size();
         Game uno = new Game();
         Deck deck = uno.shuffle();
         if ((utility.findIp()).equals(leader)){
@@ -35,33 +36,10 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             this.iamleader = true;
             //
             int miaPos = listIpPlayer.indexOf(leader);
-            int pos;
-            // se sono alla fine
-            if (miaPos == (listIpPlayer.size()-1)) {
-                pos = 0;
-                for (int i = pos; i < listIpPlayer.size()-1; i++) {
-                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
-                    stubPlayer.testDistribution(deck);
-                }
-            // sono all'inizio
-            } else if (miaPos == 0){
-                pos = miaPos+1;
-                for (int i = pos; pos < listIpPlayer.size(); i++) {
-                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
-                    stubPlayer.testDistribution(deck);
-                }
-            } else {
-                pos = miaPos+1;
-                for (int i = pos; pos < listIpPlayer.size(); i++) {
-                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
-                    stubPlayer.testDistribution(deck);
-                }
-                for (int i = 0; i < miaPos; i++) {
-                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
-                    stubPlayer.testDistribution(deck);
-                }
+            for (int i = miaPos; miaPos < nPlayers + miaPos; i++) {
+                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
+                stubPlayer.testDistribution(deck);
             }
-
         } else {
             System.out.println("il leader è: "+leader);
         }
