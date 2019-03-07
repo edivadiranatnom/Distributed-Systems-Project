@@ -1,6 +1,8 @@
 package UnoGame;
 
-public class Deck {
+import java.io.Serializable;
+
+public class Deck implements Serializable {
     public Card[] carddeck = new Card[52];
 
     //Le carte vanno da 0 9. Il "salta turno" vale 10, il "cambio giro" vale 11, il "+2" vale 12, il "cambia colore" vale 13, il "+4" vale 14.

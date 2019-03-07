@@ -1,7 +1,8 @@
 package UnoGame;
+import java.io.Serializable;
 import java.util.*;
 
-public class Game {
+public class Game implements Serializable {
     public Deck mazzo = new Deck();
     public Game(){}
 
