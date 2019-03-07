@@ -1,5 +1,3 @@
-package UnoGame;
-
 public class Deck {
     public Card[] carddeck;
 
