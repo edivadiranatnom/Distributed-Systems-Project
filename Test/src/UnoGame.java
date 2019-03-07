@@ -1,5 +1,3 @@
-package UnoGame;
-
 import java.util.*;
 
 public class UnoGame {
