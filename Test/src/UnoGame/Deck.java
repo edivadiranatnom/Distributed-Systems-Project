@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Deck implements Serializable {
-    public static ArrayList<Card> carddeck = new ArrayList<>();
+    public ArrayList<Card> carddeck = new ArrayList<>();
 
     //Le carte vanno da 0 9. Il "salta turno" vale 10, il "cambio giro" vale 11, il "+2" vale 12, il "cambia colore" vale 13, il "+4" vale 14.
     // 13 e 14 non hanno colore.

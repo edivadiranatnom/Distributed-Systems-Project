@@ -28,9 +28,10 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         this.leader = leader;
         int nPlayers = listIpPlayer.size();
         Game uno = new Game();
-        Deck deck = uno.shuffle();
-        Deck tmpDeck;
         if ((utility.findIp()).equals(leader)){
+            Deck deck = uno.shuffle();
+            uno.stampa(deck);
+            Deck tmpDeck;
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
             // circular array
@@ -38,6 +39,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             for (int i = miaPos; i < nPlayers + miaPos; i++) {
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
                 tmpDeck = stubPlayer.testDistribution(deck);
+                System.out.println("ora il deck è lungo parte 2:"+tmpDeck.carddeck.size());
+                System.out.println("Deck dentro for: \n");
+                uno.stampa(tmpDeck);
                 deck = tmpDeck;
             }
         } else {
