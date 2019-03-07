@@ -7,19 +7,19 @@ public class Game implements Serializable {
     public Game(){}
 
     public void stampa () {
-        for (int i = 0; i< mazzo.carddeck.length; i++) {
-            System.out.println(mazzo.carddeck[i].card+" "+mazzo.carddeck[i].color+"\n");
+        for (int i = 0; i< mazzo.carddeck.size(); i++) {
+            System.out.println(mazzo.carddeck.get(i).card+" "+mazzo.carddeck.get(i).color+"\n");
         }
     }
     // potrei farla anche void
     public Deck shuffle(){
         Random rgen = new Random();
 
-        for (int i=0; i<mazzo.carddeck.length; i++) {
-            int randomPosition = rgen.nextInt(mazzo.carddeck.length);
-            Card temp = mazzo.carddeck[i];
-            mazzo.carddeck[i] = mazzo.carddeck[randomPosition];
-            mazzo.carddeck[randomPosition] = temp;
+        for (int i=0; i<mazzo.carddeck.size(); i++) {
+            int randomPosition = rgen.nextInt(mazzo.carddeck.size());
+            Card temp = mazzo.carddeck.get(i);
+            mazzo.carddeck.set(i, mazzo.carddeck.get(randomPosition));
+            mazzo.carddeck.set(randomPosition, temp);
         }
 
         return mazzo;

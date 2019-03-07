@@ -1,9 +1,10 @@
 package UnoGame;
 
 import java.io.Serializable;
+import java.util.*;
 
 public class Deck implements Serializable {
-    public Card[] carddeck = new Card[52];
+    public static ArrayList<Card> carddeck = new ArrayList<>();
 
     //Le carte vanno da 0 9. Il "salta turno" vale 10, il "cambio giro" vale 11, il "+2" vale 12, il "cambia colore" vale 13, il "+4" vale 14.
     // 13 e 14 non hanno colore.
@@ -11,16 +12,26 @@ public class Deck implements Serializable {
     public String[] colorCard = new String[]{"verde", "giallo", "rosso", "blu"};
 
     public  Deck() {
-        for (int i = 0; i<52; i++) {
-            carddeck[i] = new Card();
+
+        for(int i = 0; i<52; i++){
+            carddeck.add(i, new Card());
         }
+
         int index = -1;
         for (int i = 0; i < typeCard.length; i++) {
             for (int j = 0; j < colorCard.length; j++) {
                 index++;
-                carddeck[index].card = typeCard[i];
-                carddeck[index].color = colorCard[j];
+                //carddeck.iterator().next().color = colorCard[j];
+                carddeck.get(index).color = colorCard[j];
+                carddeck.get(index).card = typeCard[i];
+                        //get(index).add(typeCard[i], colorCard[j]);
             }
         }
+    }
+
+    public Card pop(){
+        Card c = carddeck.get(carddeck.size() - 1);
+        carddeck.remove(carddeck.size() - 1);
+        return c;
     }
 }

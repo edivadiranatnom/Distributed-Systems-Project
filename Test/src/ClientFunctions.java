@@ -8,15 +8,13 @@ import java.util.*;
 public class ClientFunctions extends UnicastRemoteObject implements PlayerInterface {
     public ArrayList<String> listIpPlayer = new ArrayList<>();
     private static Utility utility = new Utility();
-    public Card[] MyCard = new Card[7];
+    public ArrayList<Card> MyCard = new ArrayList<>();
+    //public Card[] MyCard = new Card[7];
     public String leader;
     public boolean iamleader = false;
 
     public ClientFunctions() throws RemoteException {
         super();
-        for (int i = 0; i<7; i++){
-            MyCard[i] = new Card();
-        }
     }
     public void getIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();
@@ -66,10 +64,12 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void testDistribution (Deck deck) {
         System.out.println("Il mio mazzo é:\n");
+        System.out.println("il deck era lungo: "+deck.carddeck.size());
         for (int i = 0; i<7; i++){
-            MyCard[i] = deck.carddeck[i];
-            System.out.println(MyCard[i].card+"\n"+MyCard[i].color);
+            MyCard.add(deck.pop());
+            System.out.println(MyCard.get(i).card+" "+MyCard.get(i).color+"\n");
         }
+        System.out.println("ora deck è lungo: "+deck.carddeck.size());
     }
 
 }
