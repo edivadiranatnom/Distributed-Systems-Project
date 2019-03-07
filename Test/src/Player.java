@@ -12,7 +12,6 @@ public class Player{
     public static ClientFunctions Client;
     public static int paramToDelete = 0;
     public static ArrayList<String> listIpPlayer = new ArrayList<>();
-    private static boolean ReadyForPlay = false;
     public Player() {}
     public static void main(String[] args) throws Exception{
         String ip = utility.findIp();
@@ -43,30 +42,12 @@ public class Player{
             ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
             int response = stub.connect(ip);
             if (response == -1) {
-                ReadyForPlay = true;
                 listIpPlayer = Client.listIpPlayer;
                 // try {
                     // stub.kill();
                 //} catch (Exception e) {
                     //System.out.println(e);
                 //}
-            }
-            // Comunicazione ad anello
-            if (ReadyForPlay) {
-                int miaPos = Client.listIpPlayer.indexOf(ip);
-                int pos;
-                if (miaPos == (Client.listIpPlayer.size()-1)) {
-                    pos = 0;
-                } else {
-                    pos = miaPos+1;
-                }
-                Game uno = new Game();
-                Deck deck = uno.shuffle();
-                System.out.println("sono in posizione "+miaPos);
-                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+Client.listIpPlayer.get(pos)+"/ciao");
-                stubPlayer.testDistribution(deck);
-
-
             }
             //System.out.println("response: " + response);
         } catch (Exception e) {
