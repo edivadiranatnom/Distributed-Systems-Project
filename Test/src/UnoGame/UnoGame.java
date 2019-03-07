@@ -13,7 +13,7 @@ public class UnoGame {
             System.out.println(""+mazzo.carddeck[i].card+", "+mazzo.carddeck[i].color);
         }
     }
-    public Card[] shuffle(){
+    public Card[] shuffle() {
         Random rgen = new Random();
 
         for (int i=0; i<mazzo.carddeck.length; i++) {
