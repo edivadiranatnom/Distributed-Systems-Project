@@ -57,7 +57,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void testDistribution (Deck deck) {
         System.out.println("Il mio mazzo é:\n");
-        for (int i = 0; i<deck.carddeck.length; i++){
+        for (int i = 0; i<7; i++){
             MyCard[i] = deck.carddeck[i];
             System.out.println(MyCard[i]+"\n");
         }
