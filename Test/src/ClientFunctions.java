@@ -1,4 +1,4 @@
-import UnoGame.UnoGame;
+import UnoGame.*;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -10,7 +10,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     private static Utility utility = new Utility();
     public String leader;
     public boolean iamleader = false;
-    public static UnoGame uno = new UnoGame();
 
     public ClientFunctions() throws RemoteException {
         super();
@@ -28,6 +27,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         if ((utility.findIp()).equals(leader)){
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
+            UnoGame uno = new UnoGame();
             uno.stampa();
         } else {
             System.out.println("il leader è: "+leader);
