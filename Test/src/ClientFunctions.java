@@ -28,6 +28,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
     public void electionLeader(String leader) throws Exception{
         this.leader = leader;
+        Game uno = new Game();
+        Deck deck = uno.shuffle();
         if ((utility.findIp()).equals(leader)){
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
@@ -36,14 +38,22 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             int pos;
             if (miaPos == (listIpPlayer.size()-1)) {
                 pos = 0;
+                for (int i = pos; i < listIpPlayer.size()-1; i++) {
+                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
+                    stubPlayer.testDistribution(deck);
+                }
             } else {
                 pos = miaPos+1;
+                for (int i = pos; pos < listIpPlayer.size(); i++) {
+                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
+                    stubPlayer.testDistribution(deck);
+                }
+                for (int i = 0; i < miaPos; i++) {
+                    PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(i)+"/ciao");
+                    stubPlayer.testDistribution(deck);
+                }
             }
-            Game uno = new Game();
-            Deck deck = uno.shuffle();
-            System.out.println("sono il leader in posizione "+miaPos);
-            PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://"+listIpPlayer.get(pos)+"/ciao");
-            stubPlayer.testDistribution(deck);
+
         } else {
             System.out.println("il leader è: "+leader);
         }
