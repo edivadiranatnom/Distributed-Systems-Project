@@ -1,4 +1,6 @@
+import JavaFX.ExampleGui;
 import UnoGame.*;
+import JavaFX.*;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -7,13 +9,16 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
+
 public class Player{
     private static Utility utility = new Utility();
     public static ClientFunctions Client;
-    public static int paramToDelete = 0;
     public static ArrayList<String> listIpPlayer = new ArrayList<>();
+
     public Player() {}
+
     public static void main(String[] args) throws Exception{
+        // start Gui
         String ip = utility.findIp();
         System.out.println("il mio ip: "+ip);
         String host = (args.length < 1) ? null : args[0];

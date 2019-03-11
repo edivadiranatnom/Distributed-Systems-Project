@@ -1,3 +1,4 @@
+import JavaFX.*;
 import UnoGame.*;
 
 import java.rmi.Naming;
@@ -15,6 +16,13 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public ClientFunctions() throws RemoteException {
         super();
+        new Thread() {
+            @Override
+            public void run() {
+                javafx.application.Application.launch(ExampleGui.class);
+            }
+        }.start();
+        ExampleGui.test(4);
     }
     public void getIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();
