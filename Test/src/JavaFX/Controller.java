@@ -7,17 +7,21 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Controller {
+
     @FXML
     Pane player_view;
 
+    @FXML
     public void foo(int n){
-        GridPane gp = new GridPane();
-        gp.getStyleClass().add("my-card");
-        player_view.getChildren().add(gp);
+        System.out.println("sei dento foo()");
+        btdid.setText("prova in foo");
     }
 
     @FXML
     public void fooclick () {
         foo(3);
     }
+
+    @FXML
+    Button btdid;
 }

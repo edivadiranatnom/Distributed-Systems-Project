@@ -13,12 +13,13 @@
     </stylesheets>
     <children>
         <AnchorPane prefHeight="800.0" prefWidth="1200.0">
-            <Button text="ciao" onMouseClicked="#fooclick" />
+            <Button text="ciao" onMouseClicked="#fooclick" fx:id="btdid" />
             <children>
                 <Pane layoutX="200.0" layoutY="126.0" prefHeight="400.0" prefWidth="800.0" styleClass="container" />
                 <ScrollPane layoutX="100.0" layoutY="575.0" prefHeight="200.0" prefWidth="1000.0">
                     <content>
-                        <Pane fx:id="player_view" prefHeight="400.0" prefWidth="1000.0" />
+                        <Pane fx:id="player_view" prefHeight="400.0" prefWidth="1000.0" >
+                        </Pane>
                     </content>
                 </ScrollPane>
             </children>

@@ -22,7 +22,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
                 javafx.application.Application.launch(ExampleGui.class);
             }
         }.start();
-        ExampleGui.test(4);
     }
     public void getIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();
@@ -46,7 +45,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             int miaPos = listIpPlayer.indexOf(leader);
 
             // TODO: il leader deve ricevere le carte per ultimo.
-            for (int i = miaPos; i < nPlayers + miaPos; i++) {
+            for (int i = miaPos + 1; i < nPlayers + miaPos + 1; i++) {
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
                 tmpDeck = stubPlayer.testDistribution(deck);
                 System.out.println("ora il deck è lungo parte 2:"+tmpDeck.carddeck.size());
@@ -69,7 +68,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         System.out.println("-------------------------");
         System.out.println("ora deck è lungo: "+deck.carddeck.size());
         System.out.println("-------------------------");
-
+        ExampleGui.test(4);
         return deck;
     }
 

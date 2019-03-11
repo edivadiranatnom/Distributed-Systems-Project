@@ -48,11 +48,11 @@ public class Player{
             int response = stub.connect(ip);
             if (response == -1) {
                 listIpPlayer = Client.listIpPlayer;
-                // try {
-                    // stub.kill();
-                //} catch (Exception e) {
-                    //System.out.println(e);
-                //}
+                try {
+                    stub.kill();
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
             }
             //System.out.println("response: " + response);
         } catch (Exception e) {
