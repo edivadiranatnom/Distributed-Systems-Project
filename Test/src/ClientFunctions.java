@@ -1,6 +1,11 @@
-import JavaFX.*;
 import UnoGame.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
+import java.io.IOException;
+import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -10,18 +15,12 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     public ArrayList<String> listIpPlayer = new ArrayList<>();
     private static Utility utility = new Utility();
     public ArrayList<Card> MyCard = new ArrayList<>();
-    //public Card[] MyCard = new Card[7];
     public String leader;
     public boolean iamleader = false;
 
     public ClientFunctions() throws RemoteException {
         super();
-        new Thread() {
-            @Override
-            public void run() {
-                javafx.application.Application.launch(ExampleGui.class);
-            }
-        }.start();
+        //new Thread(() -> Application.launch(CustomControlExample.class)).start();
     }
     public void getIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();
@@ -32,43 +31,43 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         System.out.println("-------------------------");
     }
     public void electionLeader(String leader) throws Exception{
+        String ip = utility.findIp();
         this.leader = leader;
         int nPlayers = listIpPlayer.size();
-        Game uno = new Game();
-        if ((utility.findIp()).equals(leader)){
+        if ((ip).equals(leader)){
+            Game uno = new Game();
             Deck deck = uno.shuffle();
-            uno.stampa(deck);
             Deck tmpDeck;
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
             // circular array
             int miaPos = listIpPlayer.indexOf(leader);
 
-            // TODO: il leader deve ricevere le carte per ultimo.
             for (int i = miaPos + 1; i < nPlayers + miaPos + 1; i++) {
                 PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-                tmpDeck = stubPlayer.testDistribution(deck);
-                System.out.println("ora il deck è lungo parte 2:"+tmpDeck.carddeck.size());
-                System.out.println("Deck dentro for: \n");
-                uno.stampa(tmpDeck);
+                tmpDeck = stubPlayer.testDistribution(deck, uno, ip);
+                //System.out.println("ora il deck è lungo parte 2:"+tmpDeck.carddeck.size());
                 deck = tmpDeck;
             }
         } else {
             System.out.println("il leader è: "+leader);
         }
+        System.out.println("stampa del mio mazzo");
+        for (int i = 0; i<7; i++) {
+            System.out.println(MyCard.get(i).card + " " + MyCard.get(i).color + "\n");
+        }
     }
 
-    public Deck testDistribution (Deck deck) {
-        System.out.println("il deck era lungo: "+deck.carddeck.size());
-        System.out.println("Il mio mazzo é:\n");
+    public Deck testDistribution (Deck deck, Game uno, String ip) {
+        //System.out.println("il deck era lungo: "+deck.carddeck.size());
         for (int i = 0; i<7; i++){
             MyCard.add(deck.pop());
-            System.out.println(MyCard.get(i).card+" "+MyCard.get(i).color+"\n");
         }
+        uno.AllPlayersCards.put(ip, MyCard);
+        //uno.stampa(ip);
         System.out.println("-------------------------");
         System.out.println("ora deck è lungo: "+deck.carddeck.size());
         System.out.println("-------------------------");
-        ExampleGui.test(4);
         return deck;
     }
 

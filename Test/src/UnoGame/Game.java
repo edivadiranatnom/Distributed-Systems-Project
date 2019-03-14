@@ -4,12 +4,14 @@ import java.util.*;
 
 public class Game implements Serializable {
     public Deck mazzo = new Deck();
+    public HashMap<String, ArrayList<Card>> AllPlayersCards = new HashMap<>();
     public Game(){}
 
-    public void stampa (Deck deck) {
+    public void stampa (String ip) {
         System.out.println("sei nella stampa: \n");
-        for (int i = 0; i< deck.carddeck.size(); i++) {
-            System.out.println(deck.carddeck.get(i).card+" "+deck.carddeck.get(i).color+"\n");
+        ArrayList<Card> array = AllPlayersCards.get(ip);
+        for (int i = 0; i < array.size(); i++) {
+            System.out.println(array.get(i).card + ", " +array.get(i).color);
         }
     }
     // potrei farla anche void

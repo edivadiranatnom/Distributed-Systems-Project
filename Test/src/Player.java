@@ -1,6 +1,4 @@
-import JavaFX.ExampleGui;
 import UnoGame.*;
-import JavaFX.*;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -17,11 +15,15 @@ public class Player{
 
     public Player() {}
 
-    public static void main(String[] args) throws Exception{
+    public static void main (String[] args) {
+    }
+
+
+    public int startPlayer(String args) throws Exception{
         // start Gui
         String ip = utility.findIp();
         System.out.println("il mio ip: "+ip);
-        String host = (args.length < 1) ? null : args[0];
+        String host = args;
         try {
             LocateRegistry.createRegistry(1099);
         } catch (RemoteException e) {
@@ -41,17 +43,18 @@ public class Player{
         }
 
         // client service
+        int response = -1;
         try {
             // Registry registry = LocateRegistry.getRegistry(host);
             // ConnectionInterface stub = (ConnectionInterface) registry.lookup("connection");
             ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
-            int response = stub.connect(ip);
-            if (response == -1) {
+            response = stub.connect(ip);
+            if (response == 0) {
                 listIpPlayer = Client.listIpPlayer;
                 try {
                     stub.kill();
                 } catch (Exception e) {
-                    System.out.println(e);
+                    //System.out.println(e);
                 }
             }
             //System.out.println("response: " + response);
@@ -59,5 +62,6 @@ public class Player{
             System.err.println("Player exception: " + e.toString());
             e.printStackTrace();
         }
+        return response;
     }
 }

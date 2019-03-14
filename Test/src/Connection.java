@@ -1,4 +1,3 @@
-import JavaFX.*;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -46,7 +45,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             }
             if (max) {
                 System.out.println("Chiusura Server For Start");
-                return -1;
+                return 0;
             }
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
