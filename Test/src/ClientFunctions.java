@@ -20,7 +20,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public ClientFunctions() throws RemoteException {
         super();
-        //new Thread(() -> Application.launch(CustomControlExample.class)).start();
+        //new Thread(() -> Application.launch(GUI.class)).start();
     }
     public void getIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();

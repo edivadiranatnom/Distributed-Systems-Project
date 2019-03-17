@@ -18,12 +18,11 @@ public class Player{
     public static void main (String[] args) {
     }
 
-
-    public int startPlayer(String args) throws Exception{
+    int startPlayer(String serverIp) throws Exception{
         // start Gui
         String ip = utility.findIp();
         System.out.println("il mio ip: "+ip);
-        String host = args;
+        String host = serverIp;
         try {
             LocateRegistry.createRegistry(1099);
         } catch (RemoteException e) {
