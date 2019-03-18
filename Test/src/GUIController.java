@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -30,12 +29,12 @@ public class GUIController extends VBox {
     @FXML
     protected void startGame() throws Exception{
         Player player = new Player();
-
         if ((inputIp.getText() != null && !inputIp.getText().isEmpty())) {
             player.startPlayer(inputIp.getText());
             result.setText("Connected");
         }else{
             result.setText("Error");
         }
+
     }
 }

@@ -35,4 +35,15 @@ public class Deck implements Serializable {
         System.out.println(carddeck.size());
         return c;
     }
+
+    public void shuffle(){
+        Random rgen = new Random();
+
+        for (int i=0; i<carddeck.size(); i++) {
+            int randomPosition = rgen.nextInt(carddeck.size());
+            Card temp = carddeck.get(i);
+            carddeck.set(i, carddeck.get(randomPosition));
+            carddeck.set(randomPosition, temp);
+        }
+    }
 }

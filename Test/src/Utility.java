@@ -5,7 +5,7 @@ import java.util.Enumeration;
 
 public class Utility {
     public Utility() {}
-    public static String findIp() throws Exception {
+    public String findIp() throws Exception {
         Enumeration e = NetworkInterface.getNetworkInterfaces();
         while (e.hasMoreElements()) {
             NetworkInterface n = (NetworkInterface) e.nextElement();

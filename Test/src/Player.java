@@ -1,10 +1,6 @@
-import UnoGame.*;
-
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 
@@ -44,19 +40,14 @@ public class Player{
         // client service
         int response = -1;
         try {
-            // Registry registry = LocateRegistry.getRegistry(host);
-            // ConnectionInterface stub = (ConnectionInterface) registry.lookup("connection");
             ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
             response = stub.connect(ip);
             if (response == 0) {
                 listIpPlayer = Client.listIpPlayer;
                 try {
                     stub.kill();
-                } catch (Exception e) {
-                    //System.out.println(e);
-                }
+                } catch (Exception e) {}
             }
-            //System.out.println("response: " + response);
         } catch (Exception e) {
             System.err.println("Player exception: " + e.toString());
             e.printStackTrace();
