@@ -41,26 +41,22 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         this.leader = leader;
         int nPlayers = listIpPlayer.size();
         if ((ip).equals(leader)){
-            Game uno = new Game();
-            Deck deck = new Deck();
-            deck.shuffle();
-            Deck tmpDeck;
+//            Game uno = new Game();
+//            Deck deck = new Deck();
+//            deck.shuffle();
+//            Deck tmpDeck;
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
-            int miaPos = listIpPlayer.indexOf(leader);
-
-            for (int i = miaPos + 1; i < nPlayers + miaPos + 1; i++) {
-                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-                tmpDeck = stubPlayer.testDistribution(deck, uno, ip);
-                deck = tmpDeck;
-            }
+//            int miaPos = listIpPlayer.indexOf(leader);
+//
+//            for (int i = miaPos + 1; i < nPlayers + miaPos + 1; i++) {
+//                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
+//                tmpDeck = stubPlayer.testDistribution(deck, uno, ip);
+//                deck = tmpDeck;
+//            }
         } else {
             System.out.println("il leader è: "+leader);
         }
-//        System.out.println("stampa del mio mazzo");
-//        for (int i = 0; i<7; i++) {
-//            System.out.println(MyCard.get(i).card + " " + MyCard.get(i).color + "\n");
-//        }
     }
 
     /*
@@ -73,8 +69,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
         uno.AllPlayersCards.put(ip, MyCard);
 
-        for (int i = 0; i<listIpPlayer.size(); i++) {
-            uno.stampaCarte(listIpPlayer.get(i));
+        for (String aListIpPlayer : listIpPlayer) {
+            uno.stampaCarte(aListIpPlayer);
         }
 
         return deck;
