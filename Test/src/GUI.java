@@ -10,15 +10,10 @@ public class GUI extends Application {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader startLoader = new FXMLLoader(getClass().getResource("Start.fxml"));
-//        FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("Game.fxml"));
-
         GUIController GUIController = new GUIController();
 
         startLoader.setController(GUIController);
-//        gameLoader.setController(GUIController);
-
         Parent startRoot = startLoader.load();
-//        Parent gameRoot = gameLoader.load();
 
         stage.setScene(new Scene(startRoot));
         stage.setTitle("Uno");

@@ -24,6 +24,7 @@ public class GUIController extends VBox {
     void startGame(ActionEvent e) throws Exception{
 
         Player player = new Player();
+
         if ((inputIp.getText() != null && !inputIp.getText().isEmpty())) {
             player.startPlayer(inputIp.getText());
             result.setText("Connected");
@@ -34,6 +35,7 @@ public class GUIController extends VBox {
 
             Scene gameScene = new Scene(gameRoot);
             Stage gameStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
             gameStage.hide();
 
             gameStage.setScene(gameScene);
