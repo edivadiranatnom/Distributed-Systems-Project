@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 public class GUIController extends VBox {
     public HashMap<String, ArrayList<Card>> CopiaCard = new HashMap<>();
-    Game uno;
+    public Game uno;
     FXMLLoader gameLoader;
     Parent gameRoot;
     Scene gameScene;
@@ -68,18 +68,19 @@ public class GUIController extends VBox {
     @FXML
     protected void startDist() throws Exception {
         uno = player.distribute(uno);
-        player.gioca(uno);
+        //player.getTurno(uno);
     }
-    public void setGame (Game uno) {
-        this.uno = uno;
+    public void setGame (Game unoLocal) {
+        this.uno = unoLocal;
     }
     public void printMyDeck () {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
     }
-    public void setMyTurn(){
+    public void actionMyTurn(){
         System.out.println("E' il mio turno in controller");
         // Qua la grafica per farlo giocare;
         // Richiamare su player la funzione che implementa la giocata e la valuta.
+        //player.gioca(uno);
     }
 }

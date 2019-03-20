@@ -7,6 +7,7 @@ import java.util.*;
 public class ClientFunctions extends UnicastRemoteObject implements PlayerInterface {
     public ArrayList<String> listIpPlayer = new ArrayList<>();
     public GUIController mioController= new GUIController();
+    public Game unoLocal = new Game();
     private static Utility utility = new Utility();
     public ArrayList<Card> MyCard = new ArrayList<>();
     public String leader;
@@ -36,22 +37,36 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
     }
 
-    public Game testDistribution (Game uno) {
-        for (int i = 0; i<7; i++){
-            MyCard.add(uno.mazzo.pop());
-        }
-        uno.MyCard = MyCard;
-        mioController.setGame(uno);
+    public int cardDistribution (ArrayList<Card> playersCards) throws Exception{
+        unoLocal.MyCard = playersCards;
+        mioController.setGame(unoLocal);
         mioController.printMyDeck();
-        return uno;
+        return 1;
     }
-    public void giocaMano (Game uno) throws Exception {
+    public void communicateTurno (Game uno) throws Exception {
         try {
             if (utility.findIp().equals(uno.giocatoreTurno)) {
                 System.out.println("E' il mio turno");
-                mioController.setMyTurn();
+                mioController.actionMyTurn();
             }
             else {
+                System.out.println("E' il turno di: "+uno.giocatoreTurno);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void preStartGame (Game uno) throws Exception {
+        System.out.println("il mazzo passato è lungo: "+uno.mazzo.carddeck.size());
+        mioController.uno.mazzo = uno.mazzo;
+        mioController.uno.pushScarti(uno.peekScarti());
+        mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        try {
+            if(mioController.uno.giocatoreTurno.equals(utility.findIp())) {
+                System.out.println("E' il mio turno");
+                mioController.actionMyTurn();
+            } else {
                 System.out.println("E' il turno di: "+uno.giocatoreTurno);
             }
         } catch (Exception e) {

@@ -70,21 +70,33 @@ public class Player{
             int myIndex = listIpPlayer.indexOf(leader);
             Game unoTmp = new Game();
             for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+                ArrayList<Card> playersCards = new ArrayList<>();
+                for (int j = 0; j<7; j++){
+                    playersCards.add(uno.mazzo.pop());
+                }
                 stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-                unoTmp = stubPlayer.testDistribution(uno);
-                uno = unoTmp;
+                int ris = stubPlayer.cardDistribution(playersCards);
+                if (ris!=1){
+                    System.out.println("non torna 1\n");
+                }
             }
+            uno.pushScarti(uno.mazzo.pop());
             uno.giocatoreTurno = listIpPlayer.get(myIndex+1);
+
+            for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
+                stubPlayer.preStartGame(uno);
+            }
         }
         return uno;
     }
 
-    void gioca(Game uno) throws Exception{
+    void getTurno(Game uno) throws Exception{
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(uno.getLeader());
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
             PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-            stubPlayer.giocaMano(uno);
+            stubPlayer.communicateTurno(uno);
         }
     }
 }
