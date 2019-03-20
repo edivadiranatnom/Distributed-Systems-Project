@@ -6,6 +6,7 @@ import java.util.*;
 
 public class ClientFunctions extends UnicastRemoteObject implements PlayerInterface {
     public ArrayList<String> listIpPlayer = new ArrayList<>();
+    public GUIController mioController= new GUIController();
     private static Utility utility = new Utility();
     public ArrayList<Card> MyCard = new ArrayList<>();
     public String leader;
@@ -19,7 +20,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     *   Ad ogni nuova connessione, pulisce e aggiorna la lista
     *   degli ip di ogni player
     */
-    public void getIp(ArrayList<String> ipPlayers) {
+    public void setIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();
         for (int i=0; i<ipPlayers.size(); i++) {
             listIpPlayer.add(ipPlayers.get(i));
@@ -36,24 +37,12 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     *   setto il mio mazzo uguale al mazzo ritornato da testDistribution
     *   (mazzo senza 7 carte di i-esimo player)
     */
-    public void electionLeader(String leader) throws Exception{
+    public void setLeader(String leader) throws Exception{
         String ip = utility.findIp();
         this.leader = leader;
-        int nPlayers = listIpPlayer.size();
         if ((ip).equals(leader)){
-//            Game uno = new Game();
-//            Deck deck = new Deck();
-//            deck.shuffle();
-//            Deck tmpDeck;
             System.out.println("io sono il leader: "+leader);
             this.iamleader = true;
-//            int miaPos = listIpPlayer.indexOf(leader);
-//
-//            for (int i = miaPos + 1; i < nPlayers + miaPos + 1; i++) {
-//                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-//                tmpDeck = stubPlayer.testDistribution(deck, uno, ip);
-//                deck = tmpDeck;
-//            }
         } else {
             System.out.println("il leader è: "+leader);
         }
@@ -62,18 +51,14 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     /*
     *   Pusha 7 carte dal mazzo globale nel mio mazzo locale
     */
-    public Deck testDistribution (Deck deck, Game uno, String ip) {
-
+    public Game testDistribution (Game uno) {
         for (int i = 0; i<7; i++){
-            MyCard.add(deck.pop());
+            MyCard.add(uno.mazzo.pop());
         }
-        uno.AllPlayersCards.put(ip, MyCard);
-
-        for (String aListIpPlayer : listIpPlayer) {
-            uno.stampaCarte(aListIpPlayer);
-        }
-
-        return deck;
+        uno.MyCard = MyCard;
+        mioController.setGame(uno);
+        mioController.printMyDeck();
+        return uno;
     }
 
 }

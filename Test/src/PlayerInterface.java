@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import UnoGame.*;
 
 public interface PlayerInterface extends Remote {
-    void getIp (ArrayList<String> ip) throws Exception;
-    void electionLeader (String leader) throws Exception;
-    Deck testDistribution(Deck deck, Game uno, String ip) throws Exception;
+    void setIp (ArrayList<String> ip) throws Exception;
+    void setLeader (String leader) throws Exception;
+    Game testDistribution(Game uno) throws Exception;
 }

@@ -21,7 +21,7 @@ public class GUI extends Application {
         stage.setHeight(720);
         stage.show();
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
