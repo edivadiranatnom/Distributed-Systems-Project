@@ -6,4 +6,5 @@ public interface PlayerInterface extends Remote {
     void setIp (ArrayList<String> ip) throws Exception;
     void setLeader (String leader) throws Exception;
     Game testDistribution(Game uno) throws Exception;
+    void giocaMano(Game uno) throws Exception;
 }

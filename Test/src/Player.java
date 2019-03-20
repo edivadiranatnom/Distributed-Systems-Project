@@ -8,6 +8,7 @@ import UnoGame.*;
 public class Player{
     private static Utility utility = new Utility();
     public  ClientFunctions Client;
+    PlayerInterface stubPlayer;
     public static ArrayList<String> listIpPlayer = new ArrayList<>();
 
     public Player() {}
@@ -69,7 +70,7 @@ public class Player{
             int myIndex = listIpPlayer.indexOf(leader);
             Game unoTmp = new Game();
             for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-                PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
                 unoTmp = stubPlayer.testDistribution(uno);
                 uno = unoTmp;
             }
@@ -78,17 +79,12 @@ public class Player{
         return uno;
     }
 
-    void gioca(String turno){
-
-        try {
-            if (utility.findIp().equals(turno)) {
-                System.out.println("E' il mio turno");
-            }
-            else {
-                System.out.println("E' il turno di: "+turno);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    void gioca(Game uno) throws Exception{
+        int nPlayers = listIpPlayer.size();
+        int myIndex = listIpPlayer.indexOf(uno.getLeader());
+        for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+            PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
+            stubPlayer.giocaMano(uno);
         }
     }
 }

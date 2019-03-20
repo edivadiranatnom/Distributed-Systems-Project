@@ -45,5 +45,18 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.printMyDeck();
         return uno;
     }
+    public void giocaMano (Game uno) throws Exception {
+        try {
+            if (utility.findIp().equals(uno.giocatoreTurno)) {
+                System.out.println("E' il mio turno");
+                mioController.setMyTurn();
+            }
+            else {
+                System.out.println("E' il turno di: "+uno.giocatoreTurno);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

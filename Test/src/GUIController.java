@@ -61,7 +61,6 @@ public class GUIController extends VBox {
             }
             gameStage.setScene(gameScene);
             gameStage.show();
-            player.gioca(uno.giocatoreTurno);
         }else{
             result.setText("Error");
         }
@@ -69,6 +68,7 @@ public class GUIController extends VBox {
     @FXML
     protected void startDist() throws Exception {
         uno = player.distribute(uno);
+        player.gioca(uno);
     }
     public void setGame (Game uno) {
         this.uno = uno;
@@ -77,6 +77,9 @@ public class GUIController extends VBox {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
     }
-
-
+    public void setMyTurn(){
+        System.out.println("E' il mio turno in controller");
+        // Qua la grafica per farlo giocare;
+        // Richiamare su player la funzione che implementa la giocata e la valuta.
+    }
 }
