@@ -18,6 +18,10 @@ import javafx.stage.Stage;
 public class GUIController extends VBox {
     public HashMap<String, ArrayList<Card>> CopiaCard = new HashMap<>();
     Game uno;
+    FXMLLoader gameLoader;
+    Parent gameRoot;
+    Scene gameScene;
+    Stage gameStage;
     Player player;
     @FXML
     TextField inputIp;
@@ -33,12 +37,12 @@ public class GUIController extends VBox {
         if ((inputIp.getText() != null && !inputIp.getText().isEmpty())) {
             uno = player.startPlayer(inputIp.getText());
             result.setText("Connected");
-            FXMLLoader gameLoader = new FXMLLoader(getClass().getResource("Game.fxml"));
+            gameLoader = new FXMLLoader(getClass().getResource("Game.fxml"));
             gameLoader.setController(this);
-            Parent gameRoot = gameLoader.load();
+            gameRoot = gameLoader.load();
 
-            Scene gameScene = new Scene(gameRoot);
-            Stage gameStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+            gameScene = new Scene(gameRoot);
+            gameStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 
             gameStage.hide();
 
@@ -55,9 +59,9 @@ public class GUIController extends VBox {
                 });
                 gameMain.getChildren().add(btn);
             }
-
             gameStage.setScene(gameScene);
             gameStage.show();
+            player.gioca(uno.giocatoreTurno);
         }else{
             result.setText("Error");
         }
@@ -71,8 +75,8 @@ public class GUIController extends VBox {
     }
     public void printMyDeck () {
         System.out.println("stampa del mio mazzo: \n");
-        for (int i = 0; i < uno.MyCard.size(); i++) {
-            System.out.println(uno.MyCard.get(i).card +", "+uno.MyCard.get(i).color);
-        }
+        uno.stampaCarte();
     }
+
+
 }

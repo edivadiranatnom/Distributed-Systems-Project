@@ -73,7 +73,22 @@ public class Player{
                 unoTmp = stubPlayer.testDistribution(uno);
                 uno = unoTmp;
             }
+            uno.giocatoreTurno = listIpPlayer.get(myIndex+1);
         }
         return uno;
+    }
+
+    void gioca(String turno){
+
+        try {
+            if (utility.findIp().equals(turno)) {
+                System.out.println("E' il mio turno");
+            }
+            else {
+                System.out.println("E' il turno di: "+turno);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

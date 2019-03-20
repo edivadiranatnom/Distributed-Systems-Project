@@ -5,9 +5,12 @@ import java.util.*;
 
 public class Game implements Serializable {
     public Deck mazzo;
+    private Stack<Card> scarti = new Stack<>();
+    public String giocatoreTurno;
     public ArrayList<Card> MyCard = new ArrayList<>();
-    public HashMap<String, Integer> NumberAllPlayersCards = new HashMap<>();
+    //public HashMap<String, Integer> NumberAllPlayersCards = new HashMap<>();
     private String leader;
+
     public Game(){
         mazzo = new Deck();
     }
@@ -23,5 +26,14 @@ public class Game implements Serializable {
     }
     public String getLeader(){
         return this.leader;
+    }
+    public Card peekScarti() {
+        return scarti.peek();
+    }
+    public Card popScarti() {
+        return scarti.pop();
+    }
+    public void pushScarti(Card card) {
+        scarti.push(card);
     }
 }

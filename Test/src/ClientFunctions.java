@@ -16,10 +16,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         super();
     }
 
-    /*
-    *   Ad ogni nuova connessione, pulisce e aggiorna la lista
-    *   degli ip di ogni player
-    */
     public void setIp(ArrayList<String> ipPlayers) {
         listIpPlayer.clear();
         for (int i=0; i<ipPlayers.size(); i++) {
@@ -29,14 +25,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         System.out.println("-------------------------");
     }
 
-    /*
-    *   Setta l'ip del leader localmente ad ogni player e
-    *   se sono il leader inizializzo Game, mescolo il mazzo
-    *   e distribuisco le carte ai player a partire da quello
-    *   alla mia destra (miaPos + 1) e
-    *   setto il mio mazzo uguale al mazzo ritornato da testDistribution
-    *   (mazzo senza 7 carte di i-esimo player)
-    */
     public void setLeader(String leader) throws Exception{
         String ip = utility.findIp();
         this.leader = leader;
@@ -48,9 +36,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
     }
 
-    /*
-    *   Pusha 7 carte dal mazzo globale nel mio mazzo locale
-    */
     public Game testDistribution (Game uno) {
         for (int i = 0; i<7; i++){
             MyCard.add(uno.mazzo.pop());
