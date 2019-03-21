@@ -32,7 +32,6 @@ public class Deck implements Serializable {
     public Card pop(){
         Card c = carddeck.get(carddeck.size() - 1);
         carddeck.remove(carddeck.size() - 1);
-        System.out.println(carddeck.size());
         return c;
     }
 

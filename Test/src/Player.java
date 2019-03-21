@@ -4,34 +4,41 @@ import java.rmi.registry.LocateRegistry;
 import java.util.*;
 import UnoGame.*;
 
-
-public class Player{
+public class Player {
     private static Utility utility = new Utility();
-    public  ClientFunctions Client;
+    public ClientFunctions Client;
     PlayerInterface stubPlayer;
+    public int portRegistry = 1099;
     public static ArrayList<String> listIpPlayer = new ArrayList<>();
 
-    public Player() {}
-
-    public static void main (String[] args) {
+    public Player() {
     }
 
-    Game startPlayer(String serverIp) throws Exception{
+    public static void main(String[] args) {
+    }
+    private void setRegistry() throws Exception {
+        System.out.println("into setRegistry");
+        try {
+            LocateRegistry.createRegistry(portRegistry);
+        }  catch (RemoteException e) {
+            portRegistry = portRegistry + 1;
+            System.out.println("rmiregistry already started. Try to set on port: " + portRegistry);
+            setRegistry();
+        }
+    }
+
+    Game startPlayer(String serverIp, GUIController gc) throws Exception {
         // start Gui
         String ip = utility.findIp();
-        System.out.println("il mio ip: "+ip);
+        System.out.println("il mio ip: " + ip);
         String host = serverIp;
-        try {
-            LocateRegistry.createRegistry(1099);
-        } catch (RemoteException e) {
-            LocateRegistry.getRegistry(1099).list();
-            System.out.println("rmiregistry already started");
-        }
-
+        setRegistry();
+        System.out.println("la mia porta è: "+portRegistry);
+        ip = ip + ":" + portRegistry;
         // server service
         try {
             Client = new ClientFunctions();
-            Naming.rebind("rmi://"+ip+"/ciao", Client);
+            Naming.rebind("rmi://" + ip + "/ciao", Client);
 
             System.err.println("Ready for Ips...");
         } catch (Exception e) {
@@ -42,27 +49,29 @@ public class Player{
         // client service
         String responseIpLeader = null;
         try {
-            ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+host+"/connection");
+            ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://" + host + ":1099" +"/connection");
             responseIpLeader = stub.connect(ip);
             listIpPlayer.clear();
             listIpPlayer = Client.listIpPlayer;
+            Client.mioController = gc;
         } catch (Exception e) {
             System.err.println("Player exception: " + e.toString());
             e.printStackTrace();
         }
         Game uno = new Game();
-        uno.setLeader(responseIpLeader);
+        uno.setLeader(responseIpLeader, portRegistry);
         return uno;
     }
 
-    void killServerFor(String serverIp) throws Exception{
-        ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://"+serverIp+"/connection");
+    void killServerFor(String serverIp) throws Exception {
+        ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://" + serverIp + "/connection");
         try {
             stub.kill();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
-    Game distribute (Game uno) throws Exception{
+    Game distribute(Game uno) throws Exception {
         String leader = uno.getLeader();
         if (utility.findIp().equals(leader)) {
             uno.mazzo.shuffle();
@@ -71,32 +80,20 @@ public class Player{
             Game unoTmp = new Game();
             for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
                 ArrayList<Card> playersCards = new ArrayList<>();
-                for (int j = 0; j<7; j++){
+                for (int j = 0; j < 7; j++) {
                     playersCards.add(uno.mazzo.pop());
                 }
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-                int ris = stubPlayer.cardDistribution(playersCards);
-                if (ris!=1){
-                    System.out.println("non torna 1\n");
-                }
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.cardDistribution(playersCards);
             }
             uno.pushScarti(uno.mazzo.pop());
-            uno.giocatoreTurno = listIpPlayer.get(myIndex+1);
+            uno.giocatoreTurno = listIpPlayer.get(myIndex + 1);
 
             for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
                 stubPlayer.preStartGame(uno);
             }
         }
         return uno;
-    }
-
-    void getTurno(Game uno) throws Exception{
-        int nPlayers = listIpPlayer.size();
-        int myIndex = listIpPlayer.indexOf(uno.getLeader());
-        for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-            PlayerInterface stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i%nPlayers) + "/ciao");
-            stubPlayer.communicateTurno(uno);
-        }
     }
 }

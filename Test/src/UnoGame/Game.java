@@ -21,8 +21,8 @@ public class Game implements Serializable {
         }
     }
 
-    public void setLeader(String leader) {
-        this.leader = leader;
+    public void setLeader(String leader, int port) {
+        this.leader = leader + ":" + port;
     }
     public String getLeader(){
         return this.leader;

@@ -30,12 +30,12 @@ public class GUIController extends VBox {
     @FXML
     AnchorPane gameMain;
 
-
     @FXML
-    protected void startGame(ActionEvent e) throws Exception{
+    protected void startGame(ActionEvent e) throws Exception {
         player = new Player();
+        uno = new Game();
         if ((inputIp.getText() != null && !inputIp.getText().isEmpty())) {
-            uno = player.startPlayer(inputIp.getText());
+            uno = player.startPlayer(inputIp.getText(), this);
             result.setText("Connected");
             gameLoader = new FXMLLoader(getClass().getResource("Game.fxml"));
             gameLoader.setController(this);
@@ -46,7 +46,7 @@ public class GUIController extends VBox {
 
             gameStage.hide();
 
-            if(player.Client.iamleader){
+            if (player.Client.iamleader) {
                 Button btn = new Button("Distribuisci");
                 btn.setLayoutX(492.0);
                 btn.setLayoutY(527.0);
@@ -61,26 +61,34 @@ public class GUIController extends VBox {
             }
             gameStage.setScene(gameScene);
             gameStage.show();
-        }else{
+        } else {
             result.setText("Error");
         }
     }
+
     @FXML
     protected void startDist() throws Exception {
         uno = player.distribute(uno);
-        //player.getTurno(uno);
     }
-    public void setGame (Game unoLocal) {
+
+    public void setGame(Game unoLocal) {
         this.uno = unoLocal;
     }
-    public void printMyDeck () {
+
+    public void printMyDeck() {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
     }
-    public void actionMyTurn(){
-        System.out.println("E' il mio turno in controller");
-        // Qua la grafica per farlo giocare;
-        // Richiamare su player la funzione che implementa la giocata e la valuta.
-        //player.gioca(uno);
+
+    public void actionMyTurn(int isMyTurn) {
+        if (isMyTurn == 1) {
+            System.out.println("E' il mio turno in controller");
+            // Qua la grafica per farlo giocare;
+            // Richiamare su player la funzione che implementa la giocata e la valuta.
+            // player.gioca(uno);
+        }
+        else {
+            System.out.println("E' il turno in controller di "+uno.giocatoreTurno);
+        }
     }
 }
