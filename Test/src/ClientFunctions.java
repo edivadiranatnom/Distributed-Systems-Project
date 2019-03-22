@@ -26,10 +26,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         System.out.println("-------------------------");
     }
 
-    public void setLeader(String leader) throws Exception {
-        String ip = utility.findIp();
+    public void setLeader(String leader, String myIp) throws Exception {
+        String ip = myIp;
         this.leader = leader;
-        // bisgona calcolare la propria porta per dio
         if ((ip).equals(leader)) {
             System.out.println("io sono il leader: " + leader);
             this.iamleader = true;

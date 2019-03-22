@@ -68,6 +68,7 @@ public class GUIController extends VBox {
 
     @FXML
     protected void startDist() throws Exception {
+        System.out.println("hai cliccato start dist");
         uno = player.distribute(uno);
     }
 

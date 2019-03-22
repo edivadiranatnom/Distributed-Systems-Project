@@ -71,28 +71,37 @@ public class Player {
         }
     }
 
+    /**
+     * entri solo se sei il leader
+     * inutile controllare con il mio ip
+     * poppa() localmente dal mazzo 7 carte alla volta, per ogni Client
+     * lookup su ogni Client: cardDistribution passando le sue 7 carte.
+     * Finito il giro ne parte un altro dove comunica a tutti:
+     *  - il turno
+     *  - il mazzo
+     *  - lo scarto
+     */
+
     Game distribute(Game uno) throws Exception {
         String leader = uno.getLeader();
-        if (utility.findIp().equals(leader)) {
-            uno.mazzo.shuffle();
-            int nPlayers = listIpPlayer.size();
-            int myIndex = listIpPlayer.indexOf(leader);
-            Game unoTmp = new Game();
-            for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-                ArrayList<Card> playersCards = new ArrayList<>();
-                for (int j = 0; j < 7; j++) {
-                    playersCards.add(uno.mazzo.pop());
-                }
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                stubPlayer.cardDistribution(playersCards);
+        System.out.println("il leader in player.distribute è: "+leader);
+        uno.mazzo.shuffle();
+        int nPlayers = listIpPlayer.size();
+        int myIndex = listIpPlayer.indexOf(leader);
+        for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+            ArrayList<Card> playersCards = new ArrayList<>();
+            for (int j = 0; j < 7; j++) {
+                playersCards.add(uno.mazzo.pop());
             }
-            uno.pushScarti(uno.mazzo.pop());
-            uno.giocatoreTurno = listIpPlayer.get(myIndex + 1);
+            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+            stubPlayer.cardDistribution(playersCards);
+        }
+        uno.pushScarti(uno.mazzo.pop());
+        uno.giocatoreTurno = listIpPlayer.get(myIndex + 1);
 
-            for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                stubPlayer.preStartGame(uno);
-            }
+        for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+            stubPlayer.preStartGame(uno);
         }
         return uno;
     }
