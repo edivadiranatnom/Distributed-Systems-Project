@@ -40,6 +40,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     public void cardDistribution(ArrayList<Card> playersCards) throws Exception {
         mioController.uno.MyCard = playersCards;
         mioController.printMyDeck();
+
     }
 
     public void preStartGame(Game uno) throws Exception {
