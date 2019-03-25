@@ -6,8 +6,23 @@
 
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ScrollPane?>
 <AnchorPane stylesheets="@img/UnoStyle.css" fx:id="gameMain" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-
+        <Pane layoutX="40.0" layoutY="50.0" prefHeight="400.0" prefWidth="1000.0">
+            <children>
+                <HBox alignment="CENTER" layoutX="100.0" layoutY="50.0" prefHeight="300.0" prefWidth="800.0" fx:id="table" style="-fx-border-color: black; -fx-border-width: 2px; -fx-border-radius: 20px;"/>
+            </children>
+        </Pane>
+        <Pane layoutY="520.0" prefHeight="200.0" prefWidth="1080.0">
+            <children>
+                <ScrollPane prefHeight="200.0" prefWidth="1080.0" fx:id="myCards">
+                    <content>
+                    </content>
+                </ScrollPane>
+            </children>
+        </Pane>
     </children>
 </AnchorPane>

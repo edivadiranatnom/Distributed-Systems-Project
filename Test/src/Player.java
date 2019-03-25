@@ -84,7 +84,6 @@ public class Player {
 
     Game distribute(Game uno) throws Exception {
         String leader = uno.getLeader();
-        System.out.println("il leader in player.distribute è: "+leader);
         uno.mazzo.shuffle();
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(leader);

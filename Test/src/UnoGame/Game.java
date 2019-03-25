@@ -17,7 +17,7 @@ public class Game implements Serializable {
 
     public void stampaCarte () {
         for (int i = 0; i < MyCard.size(); i++) {
-            System.out.println(MyCard.get(i).card + MyCard.get(i).color);
+            System.out.println(MyCard.get(i).card + " " + MyCard.get(i).color + " " + MyCard.get(i).background);
         }
     }
 
