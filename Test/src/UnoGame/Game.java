@@ -8,14 +8,14 @@ public class Game implements Serializable {
     private Stack<Card> scarti = new Stack<>();
     public String giocatoreTurno;
     public ArrayList<Card> MyCard = new ArrayList<>();
-    //public HashMap<String, Integer> NumberAllPlayersCards = new HashMap<>();
+    // public HashMap<String, Integer> NumberAllPlayersCards = new HashMap<>();
     private String leader;
 
-    public Game(){
+    public Game() {
         mazzo = new Deck();
     }
 
-    public void stampaCarte () {
+    public void stampaCarte() {
         for (int i = 0; i < MyCard.size(); i++) {
             System.out.println(MyCard.get(i).card + " " + MyCard.get(i).color + " " + MyCard.get(i).background);
         }
@@ -24,15 +24,19 @@ public class Game implements Serializable {
     public void setLeader(String leader, int port) {
         this.leader = leader + ":" + port;
     }
-    public String getLeader(){
+
+    public String getLeader() {
         return this.leader;
     }
+
     public Card peekScarti() {
         return scarti.peek();
     }
+
     public Card popScarti() {
         return scarti.pop();
     }
+
     public void pushScarti(Card card) {
         scarti.push(card);
     }
