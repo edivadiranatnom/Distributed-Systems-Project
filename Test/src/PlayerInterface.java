@@ -10,4 +10,6 @@ public interface PlayerInterface extends Remote {
     void cardDistribution(ArrayList<Card> playersCards) throws Exception;
 
     void preStartGame(Game uno) throws Exception;
+
+    void communicationCard(Card cartagiocata) throws Exception;
 }

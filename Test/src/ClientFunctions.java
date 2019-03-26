@@ -39,7 +39,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void cardDistribution(ArrayList<Card> playersCards) throws Exception {
         mioController.uno.MyCard = playersCards;
-        mioController.printMyDeck();
 
     }
 
@@ -50,14 +49,19 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.pushScarti(uno.peekScarti());
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         try {
-            if (mioController.uno.giocatoreTurno.equals(utility.findIp())) {
-                mioController.actionMyTurn(1);
+            if (mioController.uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
+                mioController.designCards(7,1);
             } else {
-                mioController.actionMyTurn(0);
+                mioController.designCards(7,0);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    public void communicationCard(Card cartaGiocata) {
+        mioController.uno.pushScarti(cartaGiocata);
+        mioController.drawCardComunicated(cartaGiocata);
+    }
+
 
 }

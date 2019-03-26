@@ -45,29 +45,36 @@ public class GUIController extends VBox {
     @FXML
     HBox table;
 
-    public void AnimationTransaction(Button el, HBox parent) {
-        parent.getChildren().remove(el);
-        el.setLayoutX(100.0);
-        el.setLayoutY(700.0);
-        gameMain.getChildren().add(el);
-        // Transition
-        Polyline polyline= new Polyline();
-        Line line = new Line();
-        line.setStartX(100.0);
-        line.setStartY(700.0);
-        line.setEndX(540.0);
-        line.setEndY(400.0);
+    public void playCard(Button el, HBox parent, Card cardGiocata, int isMyTurn) {
+        if(isMyTurn == 1) {
+            System.out.println("e' il mio turno e gioco la carta\n");
+            uno.pushScarti(cardGiocata);
+            uno.MyCard.remove(uno.MyCard.indexOf(cardGiocata));
+            parent.getChildren().remove(el);
+            el.setLayoutX(100.0);
+            el.setLayoutY(700.0);
+            gameMain.getChildren().add(el);
+            // Transition
+            Polyline polyline= new Polyline();
 
-        polyline.getPoints().addAll(
-                0.0, 0.0,
-                440.0, -450.0
-        );
-        PathTransition transition = new PathTransition();
-        transition.setNode(el);
-        transition.setDuration(Duration.seconds(1.5));
-        transition.setPath(polyline);
-        //transition.setCycleCount(PathTransition.INDEFINITE);
-        transition.play();
+            polyline.getPoints().addAll(
+                    0.0, 0.0,
+                    440.0, -450.0
+            );
+            PathTransition transition = new PathTransition();
+            transition.setNode(el);
+            transition.setDuration(Duration.seconds(1.5));
+            transition.setPath(polyline);
+            //transition.setCycleCount(PathTransition.INDEFINITE);
+            transition.play();
+            try {
+                player.communicateCardPlayed(uno, cardGiocata);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            System.out.println("Non è il tuo turno\n");
+        }
     }
 
     @FXML
@@ -122,14 +129,21 @@ public class GUIController extends VBox {
     }
 
     @FXML
-    public void printMyDeck() {
+    public void designCards(int n, int isMyTurn) {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
-        designCards(7);
-    }
 
-    @FXML
-    public void designCards(int n) {
+        Platform.runLater(()->{
+            Button vboxCentralCard = new Button();
+            vboxCentralCard.getStyleClass().clear();
+            vboxCentralCard.getStyleClass().add("card_background");
+
+            vboxCentralCard.setLayoutX(400.0);
+            vboxCentralCard.setLayoutX(150.0);
+
+            vboxCentralCard.setStyle("-fx-background-image: url('img/cards/"+uno.peekScarti().color+"/"+uno.peekScarti().background+"')");
+            table.getChildren().add(vboxCentralCard);
+        });
         Platform.runLater(() -> {
             HBox hBox = new HBox();
             hBox.setPrefHeight(180.0);
@@ -143,9 +157,10 @@ public class GUIController extends VBox {
                 vbox.getStyleClass().clear();
                 vbox.getStyleClass().add("card_background");
                 hBox.getChildren().add(vbox);
-                vbox.setOnAction(event -> {
+                int finalI = i;
+                vbox.setOnAction(event-> {
                     try {
-                        AnimationTransaction(vbox, hBox);
+                        playCard(vbox, hBox, uno.MyCard.get(finalI), isMyTurn);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -158,25 +173,28 @@ public class GUIController extends VBox {
             }
         });
     }
+    void drawCardComunicated(Card cardToDraw){
+        System.out.println("la prima del cimitero: "+uno.peekScarti().color + ", " + uno.peekScarti().card);
+        Platform.runLater(()-> {
+            Button card = new Button();
+            card.getStyleClass().clear();
+            card.getStyleClass().add("card_background");
+            card.setLayoutX(100.0);
+            card.setLayoutY(700.0);
+            card.setStyle("-fx-background-image: url('img/cards/" + cardToDraw.color + "/" + cardToDraw.background + "')");
+            gameMain.getChildren().add(card);
+            Polyline polyline = new Polyline();
 
-    public void actionMyTurn(int isMyTurn) {
-        // End Transition
-        if (isMyTurn == 1) {
-            System.out.println("E' il mio turno in controller");
-        }
-        else {
-            System.out.println("E' il turno di "+uno.giocatoreTurno);
-        }
-        Platform.runLater(()->{
-            Button vboxCentralCard = new Button();
-            vboxCentralCard.getStyleClass().clear();
-            vboxCentralCard.getStyleClass().add("card_background");
-
-            vboxCentralCard.setLayoutX(400.0);
-            vboxCentralCard.setLayoutX(150.0);
-
-            vboxCentralCard.setStyle("-fx-background-image: url('img/cards/"+uno.peekScarti().color+"/"+uno.peekScarti().background+"')");
-            table.getChildren().add(vboxCentralCard);
+            polyline.getPoints().addAll(
+                    0.0, 0.0,
+                    440.0, -450.0
+            );
+            PathTransition transition = new PathTransition();
+            transition.setNode(card);
+            transition.setDuration(Duration.seconds(1.5));
+            transition.setPath(polyline);
+            //transition.setCycleCount(PathTransition.INDEFINITE);
+            transition.play();
         });
     }
 }
