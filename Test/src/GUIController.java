@@ -2,6 +2,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +26,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import UnoGame.*;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GUIController extends VBox {
     public HashMap<String, ArrayList<Card>> CopiaCard = new HashMap<>();
@@ -118,7 +124,10 @@ public class GUIController extends VBox {
                 vbox.setId(uno.MyCard.get(i).card+" "+uno.MyCard.get(i).color);
                 vbox.getStyleClass().clear();
                 vbox.getStyleClass().add("card_background");
+
+                // Lego al click sulla carta l'evento per metterla nella pila degli scarti
                 bindDiscardEvent(vbox);
+
                 hBox.getChildren().add(vbox);
             }
             myCards.setContent(hBox);
@@ -129,12 +138,39 @@ public class GUIController extends VBox {
     public void bindDiscardEvent(VBox vbox){
         vbox.setOnMousePressed(event ->  {
             final Object selectedNode = event.getSource();
-            ObservableList<Node> children = hBox.getChildren();
-            VBox card = (VBox) children.get(children.indexOf(selectedNode));
+            ObservableList<Node> HBoxChildren = hBox.getChildren();
+            VBox card = (VBox) HBoxChildren.get(HBoxChildren.indexOf(selectedNode));
+
+            ObservableList<Node> innerChildren = innerTable.getChildren();
+
+            innerChildren.remove(innerChildren.get(innerChildren.size()-1));
+            innerChildren.add(card);
+            card.toFront();
+
+            Line line = new Line();
+            line.setStartX(0.0f);
+            line.setStartY(0.0f);
+            line.setEndX(50.0f);
+            line.setEndY(50.0f);
+
+            Path path = new Path();
+            path.getElements().add(new MoveTo(card.getLayoutX(),card.getLayoutY()));
+            path.getElements().add(new LineTo(card.getLayoutX(),90));
+
+            PathTransition pathTransition = new PathTransition();
+            pathTransition.setDuration(Duration.millis(1000));
+
+            pathTransition.setPath(path);
+
+            pathTransition.setNode(card);
+            pathTransition.setOrientation(PathTransition.OrientationType.NONE);
+            pathTransition.play();
+
             System.out.println(card.getId());
         });
     }
 
+    //Disegna il deck e la prima carta scartata
     @FXML
     public void DeckAndFirstDiscard(){
         Platform.runLater(()->{
