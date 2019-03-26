@@ -1,7 +1,9 @@
 import java.io.IOException;
+import java.security.Policy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javafx.animation.PathTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +20,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import UnoGame.*;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polyline;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class GUIController extends VBox {
     public HashMap<String, ArrayList<Card>> CopiaCard = new HashMap<>();
@@ -39,8 +45,34 @@ public class GUIController extends VBox {
     @FXML
     HBox table;
 
+    public void AnimationTransaction(Button el, HBox parent) {
+        parent.getChildren().remove(el);
+        el.setLayoutX(100.0);
+        el.setLayoutY(700.0);
+        gameMain.getChildren().add(el);
+        // Transition
+        Polyline polyline= new Polyline();
+        Line line = new Line();
+        line.setStartX(100.0);
+        line.setStartY(700.0);
+        line.setEndX(540.0);
+        line.setEndY(400.0);
+
+        polyline.getPoints().addAll(
+                0.0, 0.0,
+                440.0, -450.0
+        );
+        PathTransition transition = new PathTransition();
+        transition.setNode(el);
+        transition.setDuration(Duration.seconds(1.5));
+        transition.setPath(polyline);
+        //transition.setCycleCount(PathTransition.INDEFINITE);
+        transition.play();
+    }
+
     @FXML
     protected void startGame(ActionEvent e) throws Exception {
+
         player = new Player();
         uno = new Game();
         if ((inputIp.getText() != null && !inputIp.getText().isEmpty())) {
@@ -69,6 +101,7 @@ public class GUIController extends VBox {
                         ex.printStackTrace();
                     }
                 });
+
                 table.getChildren().add(btn);
             }
             gameStage.setScene(gameScene);
@@ -97,21 +130,29 @@ public class GUIController extends VBox {
 
     @FXML
     public void designCards(int n) {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             HBox hBox = new HBox();
             hBox.setPrefHeight(180.0);
             hBox.setPrefWidth(1080.0);
             hBox.setSpacing(15.0);
             hBox.setStyle("-fx-padding: 0 75px 0 75px");
-            for (int i = 0; i<n; i++) {
-                VBox vbox = new VBox();
-                vbox.setStyle("-fx-background-image: url('img/cards/"+uno.MyCard.get(i).color+"/"+uno.MyCard.get(i).background+"')");
+            hBox.setId("hBox");
+            for (int i = 0; i < n; i++) {
+                Button vbox = new Button();
+                vbox.setStyle("-fx-background-image: url('img/cards/" + uno.MyCard.get(i).color + "/" + uno.MyCard.get(i).background + "')");
                 vbox.getStyleClass().clear();
                 vbox.getStyleClass().add("card_background");
                 hBox.getChildren().add(vbox);
+                vbox.setOnAction(event -> {
+                    try {
+                        AnimationTransaction(vbox, hBox);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
             myCards.setContent(hBox);
-            if(player.Client.iamleader) {
+            if (player.Client.iamleader) {
                 System.out.println("remove button");
                 table.getChildren().remove(table.lookup("#distribuisci"));
             }
@@ -119,6 +160,7 @@ public class GUIController extends VBox {
     }
 
     public void actionMyTurn(int isMyTurn) {
+        // End Transition
         if (isMyTurn == 1) {
             System.out.println("E' il mio turno in controller");
         }
@@ -126,7 +168,7 @@ public class GUIController extends VBox {
             System.out.println("E' il turno di "+uno.giocatoreTurno);
         }
         Platform.runLater(()->{
-            VBox vboxCentralCard = new VBox();
+            Button vboxCentralCard = new Button();
             vboxCentralCard.getStyleClass().clear();
             vboxCentralCard.getStyleClass().add("card_background");
 
