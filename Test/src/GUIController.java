@@ -37,7 +37,7 @@ public class GUIController extends VBox {
     @FXML
     ScrollPane myCards;
     @FXML
-    HBox table;
+    HBox table, innerTable;
 
     @FXML
     protected void startGame(ActionEvent e) throws Exception {
@@ -69,7 +69,7 @@ public class GUIController extends VBox {
                         ex.printStackTrace();
                     }
                 });
-                table.getChildren().add(btn);
+                innerTable.getChildren().add(btn);
             }
             gameStage.setScene(gameScene);
             gameStage.show();
@@ -113,7 +113,7 @@ public class GUIController extends VBox {
             myCards.setContent(hBox);
             if(player.Client.iamleader) {
                 System.out.println("remove button");
-                table.getChildren().remove(table.lookup("#distribuisci"));
+                innerTable.getChildren().remove(innerTable.lookup("#distribuisci"));
             }
         });
     }
@@ -126,15 +126,27 @@ public class GUIController extends VBox {
             System.out.println("E' il turno di "+uno.giocatoreTurno);
         }
         Platform.runLater(()->{
+            innerTable.setSpacing(25.0);
             VBox vboxCentralCard = new VBox();
             vboxCentralCard.getStyleClass().clear();
             vboxCentralCard.getStyleClass().add("card_background");
 
-            vboxCentralCard.setLayoutX(400.0);
-            vboxCentralCard.setLayoutX(150.0);
+            vboxCentralCard.setLayoutX(650.0);
+            vboxCentralCard.setLayoutY(150.0);
 
             vboxCentralCard.setStyle("-fx-background-image: url('img/cards/"+uno.peekScarti().color+"/"+uno.peekScarti().background+"')");
-            table.getChildren().add(vboxCentralCard);
+
+            VBox deck = new VBox();
+            deck.getStyleClass().clear();
+            deck.getStyleClass().add("deck_background");
+
+            deck.setLayoutX(150.0);
+            deck.setLayoutY(150.0);
+
+            deck.setStyle("-fx-background-image: url('img/mazzo.png')");
+
+            innerTable.getChildren().add(deck);
+            innerTable.getChildren().add(vboxCentralCard);
         });
     }
 }

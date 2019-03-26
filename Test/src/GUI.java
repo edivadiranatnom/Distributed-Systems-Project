@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
@@ -19,6 +20,7 @@ public class GUI extends Application {
         stage.setTitle("Uno");
         stage.setWidth(1080);
         stage.setHeight(720);
+        stage.getIcons().add(new Image(GUI.class.getResourceAsStream("img/Logo.png")));
         stage.show();
     }
 
