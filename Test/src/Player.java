@@ -104,4 +104,14 @@ public class Player {
         }
         return uno;
     }
+
+    void communicateCardPlayed(Game uno, Card cartagiocata) throws Exception{
+        int nPlayers = listIpPlayer.size();
+        int myIndex = listIpPlayer.indexOf(uno.giocatoreTurno);
+        for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
+
+            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+            stubPlayer.communicationCard(cartagiocata);
+        }
+    }
 }
