@@ -3,9 +3,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -38,6 +42,7 @@ public class GUIController extends VBox {
     ScrollPane myCards;
     @FXML
     HBox table, innerTable;
+    HBox hBox;
 
     @FXML
     protected void startGame(ActionEvent e) throws Exception {
@@ -92,13 +97,17 @@ public class GUIController extends VBox {
     public void printMyDeck() {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
-        designCards(7);
+        drawCards(7);
     }
 
     @FXML
-    public void designCards(int n) {
+    public void drawCards(int n) {
         Platform.runLater(()->{
-            HBox hBox = new HBox();
+            if(player.Client.iamleader) {
+                System.out.println("remove button");
+                innerTable.getChildren().remove(innerTable.lookup("#distribuisci"));
+            }
+            hBox = new HBox();
             hBox.setPrefHeight(180.0);
             hBox.setPrefWidth(1080.0);
             hBox.setSpacing(15.0);
@@ -106,25 +115,28 @@ public class GUIController extends VBox {
             for (int i = 0; i<n; i++) {
                 VBox vbox = new VBox();
                 vbox.setStyle("-fx-background-image: url('img/cards/"+uno.MyCard.get(i).color+"/"+uno.MyCard.get(i).background+"')");
+                vbox.setId(uno.MyCard.get(i).card+" "+uno.MyCard.get(i).color);
                 vbox.getStyleClass().clear();
                 vbox.getStyleClass().add("card_background");
+                bindDiscardEvent(vbox);
                 hBox.getChildren().add(vbox);
             }
             myCards.setContent(hBox);
-            if(player.Client.iamleader) {
-                System.out.println("remove button");
-                innerTable.getChildren().remove(innerTable.lookup("#distribuisci"));
-            }
         });
     }
 
-    public void actionMyTurn(int isMyTurn) {
-        if (isMyTurn == 1) {
-            System.out.println("E' il mio turno in controller");
-        }
-        else {
-            System.out.println("E' il turno di "+uno.giocatoreTurno);
-        }
+    @FXML
+    public void bindDiscardEvent(VBox vbox){
+        vbox.setOnMousePressed(event ->  {
+            final Object selectedNode = event.getSource();
+            ObservableList<Node> children = hBox.getChildren();
+            VBox card = (VBox) children.get(children.indexOf(selectedNode));
+            System.out.println(card.getId());
+        });
+    }
+
+    @FXML
+    public void DeckAndFirstDiscard(){
         Platform.runLater(()->{
             innerTable.setSpacing(25.0);
             VBox vboxCentralCard = new VBox();
@@ -149,4 +161,15 @@ public class GUIController extends VBox {
             innerTable.getChildren().add(vboxCentralCard);
         });
     }
+
+    @FXML
+    public void actionMyTurn(int isMyTurn) {
+        if (isMyTurn == 1) {
+            System.out.println("E' il mio turno in controller");
+        }
+        else {
+            System.out.println("E' il turno di "+uno.giocatoreTurno);
+        }
+    }
+
 }

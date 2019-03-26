@@ -20,13 +20,9 @@
                 </HBox>
             </children>
         </Pane>
-        <!--<Pane layoutY="520.0" prefHeight="200.0" prefWidth="1080.0">-->
-            <!--<children>-->
-            <ScrollPane fx:id="myCards" layoutY="520.0" prefHeight="200.0" prefWidth="1080.0">
-                <content>
-                </content>
-            </ScrollPane>
-            <!--</children>-->
-        <!--</Pane>-->
+        <ScrollPane fx:id="myCards" layoutY="520.0" prefHeight="200.0" prefWidth="1080.0">
+            <content>
+            </content>
+        </ScrollPane>
     </children>
 </AnchorPane>

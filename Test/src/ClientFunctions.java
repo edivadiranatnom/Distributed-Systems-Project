@@ -1,6 +1,7 @@
 import UnoGame.*;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
@@ -45,12 +46,14 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void preStartGame(Game uno) throws Exception {
         System.out.println("il mazzo passato è lungo: " + uno.mazzo.carddeck.size());
-        System.out.println("e il primo scarto è: " + uno.peekScarti().card + ", " + uno.peekScarti().color);
+        System.out.println("e il primo scarto è: " + uno.peekScarti().card + " " + uno.peekScarti().color);
         mioController.uno.mazzo = uno.mazzo;
         mioController.uno.pushScarti(uno.peekScarti());
+        mioController.DeckAndFirstDiscard();
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+
         try {
-            if (mioController.uno.giocatoreTurno.equals(utility.findIp())) {
+            if (mioController.uno.giocatoreTurno.equals(utility.findIp()+":"+String.valueOf(mioController.player.portRegistry))) {
                 mioController.actionMyTurn(1);
             } else {
                 mioController.actionMyTurn(0);
@@ -58,6 +61,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 }
