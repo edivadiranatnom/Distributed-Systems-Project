@@ -153,7 +153,7 @@ public class GUIController extends VBox {
                 vbox.getStyleClass().add("card_background");
                 hBox.getChildren().add(vbox);
                 vbox.setId(uno.MyCard.get(i).color+"_"+uno.MyCard.get(i).card);
-                foo(vbox, hBox, uno.MyCard.get(i), 1);
+                trigEvent(vbox, hBox, uno.MyCard.get(i), isMyTurn);
             }
             myCards.setContent(hBox);
             if (player.Client.iamleader) {
@@ -162,7 +162,7 @@ public class GUIController extends VBox {
             }
         });
     }
-    void foo(Button vbox, HBox hBox, Card c, int isMyTurn){
+    void trigEvent(Button vbox, HBox hBox, Card c, int isMyTurn){
         vbox.setOnMousePressed(event -> {
             System.out.println("Ho cliccato su: " + ((Control)event.getSource()).getId()+"\n");
             try {
@@ -179,14 +179,14 @@ public class GUIController extends VBox {
             card.getStyleClass().clear();
             card.getStyleClass().add("card_background");
             card.setLayoutX(100.0);
-            card.setLayoutY(700.0);
+            card.setLayoutY(100.0);
             card.setStyle("-fx-background-image: url('img/cards/" + cardToDraw.color + "/" + cardToDraw.background + "')");
             gameMain.getChildren().add(card);
             Polyline polyline = new Polyline();
 
             polyline.getPoints().addAll(
                     0.0, 0.0,
-                    440.0, -450.0
+                    440.0, 150.0
             );
             PathTransition transition = new PathTransition();
             transition.setNode(card);
