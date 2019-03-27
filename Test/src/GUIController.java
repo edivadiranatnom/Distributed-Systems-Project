@@ -11,10 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -47,7 +44,6 @@ public class GUIController extends VBox {
 
     public void playCard(Button el, HBox parent, Card cardGiocata, int isMyTurn) {
         if(isMyTurn == 1) {
-            System.out.println("e' il mio turno e gioco la carta\n");
             uno.pushScarti(cardGiocata);
             uno.MyCard.remove(uno.MyCard.indexOf(cardGiocata));
             parent.getChildren().remove(el);
@@ -65,7 +61,6 @@ public class GUIController extends VBox {
             transition.setNode(el);
             transition.setDuration(Duration.seconds(1.5));
             transition.setPath(polyline);
-            //transition.setCycleCount(PathTransition.INDEFINITE);
             transition.play();
             try {
                 player.communicateCardPlayed(uno, cardGiocata);
@@ -157,19 +152,23 @@ public class GUIController extends VBox {
                 vbox.getStyleClass().clear();
                 vbox.getStyleClass().add("card_background");
                 hBox.getChildren().add(vbox);
-                int finalI = i;
-                vbox.setOnAction(event-> {
-                    try {
-                        playCard(vbox, hBox, uno.MyCard.get(finalI), isMyTurn);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
+                vbox.setId(uno.MyCard.get(i).color+"_"+uno.MyCard.get(i).card);
+                foo(vbox, hBox, uno.MyCard.get(i), 1);
             }
             myCards.setContent(hBox);
             if (player.Client.iamleader) {
                 System.out.println("remove button");
                 table.getChildren().remove(table.lookup("#distribuisci"));
+            }
+        });
+    }
+    void foo(Button vbox, HBox hBox, Card c, int isMyTurn){
+        vbox.setOnMousePressed(event -> {
+            System.out.println("Ho cliccato su: " + ((Control)event.getSource()).getId()+"\n");
+            try {
+                playCard(vbox, hBox, c, isMyTurn);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
     }
