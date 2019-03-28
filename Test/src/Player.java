@@ -96,7 +96,7 @@ public class Player {
             stubPlayer.cardDistribution(playersCards);
         }
         uno.pushScarti(uno.mazzo.pop());
-        uno.giocatoreTurno = listIpPlayer.get(myIndex + 1);
+        uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
 
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
             stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
@@ -108,10 +108,59 @@ public class Player {
     void communicateCardPlayed(Game uno, Card cartagiocata) throws Exception{
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(uno.giocatoreTurno);
-        for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
-
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            stubPlayer.communicationCard(cartagiocata);
+        System.out.println("Sono in p.c. E' il mo turno, cambio: "+listIpPlayer.indexOf(uno.giocatoreTurno)+". Lo scarto è: "+uno.peekScarti().card +", "+uno.peekScarti().color);
+        if (uno.giroOrario) {
+            if (uno.peekScarti().card == 10) {
+                // Inverto il turno nello stato globale?
+                System.out.println("Carta particolare. Si inverte il turno");
+                uno.giroOrario = false;
+                if(myIndex == 0){
+                    System.out.println("Fine di merda, sono lo 0. Setto a mano l'ultimo");
+                    uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-1);
+                }
+                else {
+                    uno.giocatoreTurno = listIpPlayer.get((myIndex-1)%nPlayers);
+                }
+            } else if (uno.peekScarti().card == 12) {
+                System.out.println("Carta particolare. Salta un player");
+                uno.giocatoreTurno = listIpPlayer.get((myIndex+2)%nPlayers);
+            } else {
+                uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
+            }
+            System.out.println("Sono in p.c. ora il turno è di: "+listIpPlayer.indexOf(uno.giocatoreTurno));
+            for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                System.out.println("giroOrario: "+uno.giroOrario);
+                stubPlayer.communicationCard(uno, cartagiocata);
+            }
+        } else {
+            if (uno.peekScarti().card == 10) {
+                // Inverto il turno nello stato globale?
+                System.out.println("Carta particolare. Si inverte il turno");
+                uno.giroOrario = true;
+                uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
+            } else if (uno.peekScarti().card == 12) {
+                System.out.println("Carta particolare. Salta un player");
+                if(myIndex == 1){
+                    System.out.println("Fine di merda, sono l'1. Setto a mano l'ultimo");
+                    uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-1);
+                }
+                else {
+                    uno.giocatoreTurno = listIpPlayer.get((myIndex-2)%nPlayers);
+                }
+            } else {
+                if(myIndex == 0){
+                    System.out.println("Fine di merda, sono lo 0. Setto a mano l'ultimo");
+                    uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-1);
+                }
+                else {
+                    uno.giocatoreTurno = listIpPlayer.get((myIndex-1)%nPlayers);
+                }            }
+            System.out.println("Sono in p.c. ora il turno è di: "+listIpPlayer.indexOf(uno.giocatoreTurno));
+            for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.communicationCard(uno, cartagiocata);
+            }
         }
     }
 }

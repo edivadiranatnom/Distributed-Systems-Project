@@ -50,17 +50,36 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         try {
             if (mioController.uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
-                mioController.designCards(7,1);
+                mioController.designCards(7);
+                mioController.uno.isMyTurn = true;
+                System.out.println("E' il mio turno");
             } else {
-                mioController.designCards(7,0);
+                mioController.designCards(7);
+                mioController.uno.isMyTurn = false;
+                System.out.println("Non è il mio turno: "+mioController.uno.giocatoreTurno);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void communicationCard(Card cartaGiocata) {
+    public void communicationCard(Game uno, Card cartaGiocata) {
         mioController.uno.pushScarti(cartaGiocata);
         mioController.drawCardComunicated(cartaGiocata);
+        mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        mioController.uno.giroOrario = uno.giroOrario;
+        System.out.println("Il turno E': "+mioController.uno.giroOrario);
+        try {
+            if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
+                mioController.uno.isMyTurn = true;
+                System.out.println("E' il mio turno in c.f.");
+            } else {
+                mioController.uno.isMyTurn = false;
+                System.out.println("Non è il mio turno in c.f.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

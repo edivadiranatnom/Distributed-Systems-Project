@@ -42,8 +42,10 @@ public class GUIController extends VBox {
     @FXML
     HBox table;
 
-    public void playCard(Button el, HBox parent, Card cardGiocata, int isMyTurn) {
-        if(isMyTurn == 1) {
+    public void playCard(Button el, HBox parent, Card cardGiocata) {
+        if(uno.isMyTurn) {
+            uno.isMyTurn = false;
+            System.out.println("è il mio turno  gioco: "+cardGiocata.card + ", " + cardGiocata.color);
             uno.pushScarti(cardGiocata);
             uno.MyCard.remove(uno.MyCard.indexOf(cardGiocata));
             parent.getChildren().remove(el);
@@ -124,7 +126,7 @@ public class GUIController extends VBox {
     }
 
     @FXML
-    public void designCards(int n, int isMyTurn) {
+    public void designCards(int n) {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
 
@@ -153,7 +155,7 @@ public class GUIController extends VBox {
                 vbox.getStyleClass().add("card_background");
                 hBox.getChildren().add(vbox);
                 vbox.setId(uno.MyCard.get(i).color+"_"+uno.MyCard.get(i).card);
-                trigEvent(vbox, hBox, uno.MyCard.get(i), isMyTurn);
+                trigEvent(vbox, hBox, uno.MyCard.get(i));
             }
             myCards.setContent(hBox);
             if (player.Client.iamleader) {
@@ -162,11 +164,11 @@ public class GUIController extends VBox {
             }
         });
     }
-    void trigEvent(Button vbox, HBox hBox, Card c, int isMyTurn){
+    void trigEvent(Button vbox, HBox hBox, Card c){
         vbox.setOnMousePressed(event -> {
             System.out.println("Ho cliccato su: " + ((Control)event.getSource()).getId()+"\n");
             try {
-                playCard(vbox, hBox, c, isMyTurn);
+                playCard(vbox, hBox, c);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

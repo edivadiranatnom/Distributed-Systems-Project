@@ -6,7 +6,7 @@ import java.util.*;
 public class Deck implements Serializable {
     public ArrayList<Card> carddeck = new ArrayList<>();
 
-    //Le carte vanno da 0 9. Il "salta turno" vale 10, il "cambio giro" vale 11, il "+2" vale 12, il "cambia colore" vale 13, il "+4" vale 14.
+    //Le carte vanno da 0 9. Il "salta turno" vale 10, il "cambio giro" vale 12, il "+2" vale 11, il "cambia colore" vale 13, il "+4" vale 14.
     // 13 e 14 non hanno colore.
     public int[] typeCard = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
     public String[] colorCard = new String[]{"green", "yellow", "red", "blue", "black"};
