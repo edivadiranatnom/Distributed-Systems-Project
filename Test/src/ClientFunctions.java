@@ -48,6 +48,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.mazzo = uno.mazzo;
         mioController.uno.pushScarti(uno.peekScarti());
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        mioController.uno.currentColor = uno.currentColor;
         try {
             if (mioController.uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
                 mioController.designCards(7);
@@ -65,9 +66,10 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
     public void communicationCard(Game uno, Card cartaGiocata) {
         mioController.uno.pushScarti(cartaGiocata);
-        mioController.drawCardComunicated(cartaGiocata);
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.giroOrario = uno.giroOrario;
+        mioController.uno.currentColor = uno.currentColor;
+        mioController.drawCardComunicated(cartaGiocata);
         System.out.println("Il turno E': "+mioController.uno.giroOrario);
         try {
             if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {

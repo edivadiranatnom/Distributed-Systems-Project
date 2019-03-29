@@ -95,7 +95,9 @@ public class Player {
             stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
             stubPlayer.cardDistribution(playersCards);
         }
+        // prima carta sul tavolo.
         uno.pushScarti(uno.mazzo.pop());
+        uno.currentColor = uno.peekScarti().color;
         uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
 
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
