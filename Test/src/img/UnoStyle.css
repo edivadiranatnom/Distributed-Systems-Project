@@ -23,6 +23,12 @@
     -fx-background-size: cover;
 }
 
+.deck_background {
+    -fx-pref-height: 180px;
+    -fx-pref-width: 180px;
+    -fx-background-size: cover;
+}
+
 .deck_background{
     -fx-pref-height: 180px;
     -fx-pref-width: 220px;

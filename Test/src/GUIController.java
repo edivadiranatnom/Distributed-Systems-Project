@@ -128,17 +128,28 @@ public class GUIController extends VBox {
         this.uno = unoLocal;
     }
 
+
+
     @FXML
     public void designCards(int n, int isMyTurn) {
         Platform.runLater(()->{
             Button vboxCentralCard = new Button();
+            Button deck = new Button();
             vboxCentralCard.getStyleClass().clear();
             vboxCentralCard.getStyleClass().add("card_background");
 
+            deck.getStyleClass().clear();
+            deck.getStyleClass().add("deck_background");
+
             vboxCentralCard.setLayoutX(400.0);
-            vboxCentralCard.setLayoutX(150.0);
+            vboxCentralCard.setLayoutY(150.0);
+
+            deck.setLayoutX(200.0);
+            deck.setLayoutY(150.0);
 
             vboxCentralCard.setStyle("-fx-background-image: url('img/cards/"+uno.peekScarti().color+"/"+uno.peekScarti().background+"')");
+            deck.setStyle("-fx-background-image: url('img/mazzo.png')");
+            table.getChildren().add(deck);
             table.getChildren().add(vboxCentralCard);
 
             HBox hBox = new HBox();
@@ -203,13 +214,11 @@ public class GUIController extends VBox {
         Platform.runLater(()-> {
             String[] parts = ip.split(":");
             String secondPart = parts[1];
-
             Image image = new Image("img/avatar/"+uno.NumberAllPlayersCards.get(ip).get(1));
             VBox vBox = (VBox) gameScene.lookup("#avatar"+pos);
             vBox.setAlignment(Pos.BOTTOM_CENTER);
             BackgroundSize backgroundSize = new BackgroundSize(50, 50, false, false, false, false);
             Background background = new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
-
             Text host = new Text("PORT: "+secondPart);
             Text remainingCards = new Text("CARDS: "+uno.NumberAllPlayersCards.get(ip).get(0));
             host.setFill(Color.WHITE);

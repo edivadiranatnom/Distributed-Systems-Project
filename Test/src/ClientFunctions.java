@@ -44,19 +44,13 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
 
     public void preStartGame(Game uno) throws Exception {
-//        System.out.println("il mazzo passato è lungo: " + uno.mazzo.carddeck.size());
-//        System.out.println("e il primo scarto è: " + uno.peekScarti().card + ", " + uno.peekScarti().color);
         mioController.uno.mazzo = uno.mazzo;
         mioController.uno.pushScarti(uno.peekScarti());
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.NumberAllPlayersCards = uno.NumberAllPlayersCards;
 
         for (String item : listIpPlayer) {
-            if(!item.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
-                System.out.println("\nitem: "+item);
-                System.out.println("findIp(): "+utility.findIp()+":"+mioController.player.portRegistry+"\n");
-                mioController.createAvatar(item, listIpPlayer.indexOf(item));
-            }
+            mioController.createAvatar(item, listIpPlayer.indexOf(item));
         }
 
         try {
