@@ -8,7 +8,7 @@ public class Game implements Serializable {
     private Stack<Card> scarti = new Stack<>();
     public String giocatoreTurno;
     public ArrayList<Card> MyCard = new ArrayList<>();
-    // public HashMap<String, Integer> NumberAllPlayersCards = new HashMap<>();
+     public HashMap<String, ArrayList<String>> NumberAllPlayersCards = new HashMap<>();
     private String leader;
 
     public Game() {

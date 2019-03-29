@@ -1,4 +1,6 @@
 import UnoGame.*;
+import javafx.scene.layout.VBox;
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -39,15 +41,24 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void cardDistribution(ArrayList<Card> playersCards) throws Exception {
         mioController.uno.MyCard = playersCards;
-
     }
 
     public void preStartGame(Game uno) throws Exception {
-        System.out.println("il mazzo passato è lungo: " + uno.mazzo.carddeck.size());
-        System.out.println("e il primo scarto è: " + uno.peekScarti().card + ", " + uno.peekScarti().color);
+//        System.out.println("il mazzo passato è lungo: " + uno.mazzo.carddeck.size());
+//        System.out.println("e il primo scarto è: " + uno.peekScarti().card + ", " + uno.peekScarti().color);
         mioController.uno.mazzo = uno.mazzo;
         mioController.uno.pushScarti(uno.peekScarti());
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        mioController.uno.NumberAllPlayersCards = uno.NumberAllPlayersCards;
+
+        for (String item : listIpPlayer) {
+            if(!item.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
+                System.out.println("\nitem: "+item);
+                System.out.println("findIp(): "+utility.findIp()+":"+mioController.player.portRegistry+"\n");
+                mioController.createAvatar(item, listIpPlayer.indexOf(item));
+            }
+        }
+
         try {
             if (mioController.uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
                 mioController.designCards(7,1);
@@ -62,6 +73,5 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.pushScarti(cartaGiocata);
         mioController.drawCardComunicated(cartaGiocata);
     }
-
 
 }
