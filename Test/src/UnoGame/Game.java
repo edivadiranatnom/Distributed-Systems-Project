@@ -7,6 +7,10 @@ public class Game implements Serializable {
     public Deck mazzo;
     private Stack<Card> scarti = new Stack<>();
     public String giocatoreTurno;
+    public boolean isMyTurn = false;
+    public boolean giroOrario = true;
+    public boolean canPlay = false;
+    public String currentColor;
     public ArrayList<Card> MyCard = new ArrayList<>();
      public HashMap<String, ArrayList<String>> NumberAllPlayersCards = new HashMap<>();
     private String leader;
