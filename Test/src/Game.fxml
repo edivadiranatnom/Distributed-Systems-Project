@@ -20,7 +20,7 @@
                 <VBox id="avatar6" layoutX="200.0" layoutY="350.0" prefHeight="100.0" prefWidth="100.0" />
             </children>
         </Pane>
-        <ScrollPane fx:id="myCards" layoutY="520.0" prefHeight="200.0" prefWidth="1080.0">
+        <ScrollPane fx:id="myCards" style="-fx-padding: 0 0 15px 0" layoutY="500.0" prefHeight="220.0" prefWidth="1080.0">
             <content>
             </content>
         </ScrollPane>

@@ -74,10 +74,11 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
-        mioController.drawCardComunicated(cartaGiocata);
+        mioController.designCardCommunicated(cartaGiocata);
         System.out.println("Il turno E': "+mioController.uno.giroOrario);
         try {
             if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
+
                 mioController.uno.isMyTurn = true;
                 System.out.println("E' il mio turno in c.f.");
             } else {
@@ -87,6 +88,21 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void removeDrawedCard(Card card, String ip){
+        System.out.println("\nPlayer "+ ip +" ha pescato "+card.card+" "+card.color+"\n");
+        Card popped = mioController.uno.mazzo.pop();
+        System.out.println("\nPlayer "+ ip +" ha pescato "+popped.card+" "+popped.color);
+
+        if( (popped.color.equals(card.color)) && (popped.card == card.card) ) {
+            int numCards = Integer.parseInt(mioController.uno.NumberAllPlayersCards.get(ip).get(0));
+            mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(numCards + 1));
+        }else{
+            System.out.println("\nPORCODDIO");
+        }
+
+        System.out.println("\nGiocatore: "+ip+" ora ha "+mioController.uno.NumberAllPlayersCards.get(ip).get(0)+" carte\n");
     }
 
 }
