@@ -9,7 +9,6 @@ public class Game implements Serializable {
     public String giocatoreTurno;
     public boolean isMyTurn = false;
     public boolean giroOrario = true;
-    public boolean canPlay = false;
     public String currentColor;
     public ArrayList<Card> MyCard = new ArrayList<>();
     //public HashMap<String, Integer> NumberAllPlayersCards = new HashMap<>();

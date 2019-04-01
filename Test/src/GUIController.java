@@ -73,11 +73,11 @@ public class GUIController extends VBox {
                     System.out.println(e);
                 }
             } else {
-                System.out.println("Non hai giocato una carta che non potevi giocare");
+                System.out.println("---------------------------------\n\n Non hai giocato una carta che non potevi giocare\n\n ---------------------------------");
 
             }
         } else {
-            System.out.println("Non è il tuo turno\n");
+            System.out.println("---------------------------------\n\n Non è il tuo turno\n\n ---------------------------------");
         }
     }
 
@@ -152,6 +152,8 @@ public class GUIController extends VBox {
             HBox hBox = new HBox();
             hBox.setPrefHeight(180.0);
             hBox.setPrefWidth(1080.0);
+            hBox.setLayoutX(0.0);
+            hBox.setLayoutX(0.0);
             hBox.setSpacing(15.0);
             hBox.setStyle("-fx-padding: 0 75px 0 75px");
             hBox.setId("hBox");

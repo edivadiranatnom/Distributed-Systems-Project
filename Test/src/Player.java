@@ -147,6 +147,10 @@ public class Player {
                     System.out.println("Fine di merda, sono l'1. Setto a mano l'ultimo");
                     uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-1);
                 }
+                if(myIndex == 0){
+                    System.out.println("Fine di merda, sono l'1. Setto a mano l'ultimo");
+                    uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-2);
+                }
                 else {
                     uno.giocatoreTurno = listIpPlayer.get((myIndex-2)%nPlayers);
                 }
