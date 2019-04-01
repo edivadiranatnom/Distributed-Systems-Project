@@ -133,9 +133,12 @@ public class Player {
                 uno.giocatoreTurno = listIpPlayer.get((myIndex + 1) % nPlayers);
             }
             System.out.println("Sono in p.c. ora il turno è di: " + listIpPlayer.indexOf(uno.giocatoreTurno));
+            for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.communicationTurn(uno);
+            }
             for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
                 stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                System.out.println("giroOrario: " + uno.giroOrario);
                 stubPlayer.communicationCard(uno, cartagiocata);
             }
         } else {
@@ -162,6 +165,10 @@ public class Player {
                     uno.giocatoreTurno = listIpPlayer.get((myIndex-1)%nPlayers);
                 }            }
             System.out.println("Sono in p.c. ora il turno è di: "+listIpPlayer.indexOf(uno.giocatoreTurno));
+            for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.communicationTurn(uno);
+            }
             for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
                 stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
                 stubPlayer.communicationCard(uno, cartagiocata);
@@ -205,7 +212,7 @@ public class Player {
             }
         }
         System.out.println("Sono in p.c. ora il turno è di: "+listIpPlayer.indexOf(uno.giocatoreTurno));
-        for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
+        for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
             stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
             stubPlayer.communicationTurn(uno);
         }

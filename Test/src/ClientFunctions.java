@@ -53,6 +53,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         for (String item : listIpPlayer) {
             mioController.createAvatar(item, listIpPlayer.indexOf(item));
         }
+        mioController.greenAvatar(0);
 
         mioController.uno.currentColor = uno.currentColor;
         try {
@@ -72,22 +73,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
     public void communicationCard(Game uno, Card cartaGiocata) {
         mioController.uno.pushScarti(cartaGiocata);
-        mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
-        System.out.println("Il turno E': "+mioController.uno.giroOrario);
-        try {
-            if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
-
-                mioController.uno.isMyTurn = true;
-                System.out.println("E' il mio turno in c.f.");
-            } else {
-                mioController.uno.isMyTurn = false;
-                System.out.println("Non è il mio turno in c.f.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // communicationTurn(uno);
         mioController.designCardCommunicated(cartaGiocata);
     }
 
@@ -103,17 +91,20 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     }
 
     public void communicationTurn (Game uno) {
-        System.out.println("il giocatore ha skippato, è il turno di: "+uno.giocatoreTurno);
+        System.out.println("E' il turno di: "+uno.giocatoreTurno);
+        mioController.removeGreenAvatar(listIpPlayer.indexOf(mioController.uno.giocatoreTurno));
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        mioController.greenAvatar(listIpPlayer.indexOf(mioController.uno.giocatoreTurno));
         try {
             if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
 
                 mioController.uno.isMyTurn = true;
-                System.out.println("E' il mio turno dopo skip");
+                System.out.println("E' il mio turno");
             } else {
                 mioController.uno.isMyTurn = false;
-                System.out.println("Non è il mio turno dopo skip");
+                System.out.println("Non è il mio turno");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

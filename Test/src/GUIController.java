@@ -72,6 +72,8 @@ public class GUIController extends VBox {
                 transition.setDuration(Duration.seconds(1.5));
                 transition.setPath(polyline);
                 transition.play();
+                System.out.println("pos di avatar in playcard: "+player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
+                removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
                 try {
                     uno.currentColor = cardGiocata.color;
                     player.communicateCardPlayed(uno, cardGiocata);
@@ -366,6 +368,8 @@ public class GUIController extends VBox {
         System.out.println("Il turno ora è di "+uno.giocatoreTurno +"\n Cambia turno!");
         if (uno.isMyTurn){
             try {
+                System.out.println("pos di avatar in skip: "+player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
+                removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
                 player.skipTurn(uno);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -374,6 +378,16 @@ public class GUIController extends VBox {
         else {
             System.out.println("non puoi skippare non è il tuo turno");
         }
+    }
+    public void greenAvatar(int pos) {
+        System.out.println("PORCCCODDDIIIOOOOOO: "+pos);
+        VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+        vBox.setStyle("-fx-border-color: white");
+    }
+    public void removeGreenAvatar(int pos) {
+        System.out.println("RICHIMAO UNA FUNZ SU ME STESSO");
+        VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+        vBox.setStyle("-fx-border-color: transparent");
     }
 
 }
