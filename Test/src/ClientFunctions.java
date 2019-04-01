@@ -94,10 +94,12 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         System.out.println("\nPlayer "+ ip +" ha pescato "+card.card+" "+card.color+"\n");
         Card popped = mioController.uno.mazzo.pop();
         System.out.println("\nPlayer "+ ip +" ha pescato "+popped.card+" "+popped.color);
+        mioController.uno.stampaCarte();
 
         if( (popped.color.equals(card.color)) && (popped.card == card.card) ) {
             int numCards = Integer.parseInt(mioController.uno.NumberAllPlayersCards.get(ip).get(0));
             mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(numCards + 1));
+            mioController.updateAvatar(numCards + 1);
         }else{
             System.out.println("\nPORCODDIO");
         }

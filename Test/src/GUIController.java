@@ -156,7 +156,13 @@ public class GUIController extends VBox {
             deck.setStyle("-fx-background-image: url('img/mazzo.png')");
 
             try {
-                drawEvent(deck, uno.mazzo.pop());
+                deck.setOnMousePressed(event -> {
+                    try {
+                        drawCard(uno.mazzo.pop());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,21 +170,24 @@ public class GUIController extends VBox {
             table.getChildren().add(deck);
             table.getChildren().add(vboxCentralCard);
         });
+
         Platform.runLater(()-> {
             HBox hBox = new HBox();
             hBox.setPrefHeight(400.0);
             hBox.setPrefWidth(1080.0);
             hBox.setSpacing(15.0);
+            hBox.setId("hBox");
+            hBox.setStyle("-fx-padding: 0 0px 25px 0px");
 
             HBox innerHBox = new HBox();
             innerHBox.setPrefHeight(180.0);
             innerHBox.setPrefWidth(1080.0);
             innerHBox.setSpacing(15.0);
+            innerHBox.setLayoutX(0.0);
+            innerHBox.setLayoutY(0.0);
             innerHBox.setStyle("-fx-padding: 0 75px 0 75px");
-
-            hBox.setId("hBox");
-            hBox.setStyle("-fx-padding: 0 0px 25px 0px");
             innerHBox.setId("innerHBox1");
+
             hBox.getChildren().add(innerHBox);
 
             for (int i = 0; i < n; i++) {
@@ -191,6 +200,7 @@ public class GUIController extends VBox {
                 vbox.setId(uno.MyCard.get(i).color + "_" + uno.MyCard.get(i).card);
                 trigEvent(vbox, innerHBox, uno.MyCard.get(i));
             }
+
             myCards.setContent(hBox);
             if (player.Client.iamleader) {
                 System.out.println("remove button");
@@ -247,6 +257,7 @@ public class GUIController extends VBox {
             Background background = new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
             Text host = new Text("PORT: "+secondPart);
             Text remainingCards = new Text("CARDS: "+uno.NumberAllPlayersCards.get(ip).get(0));
+            remainingCards.setId("remainingCards");
             host.setFill(Color.WHITE);
             remainingCards.setFill(Color.WHITE);
             vBox.setBackground(background);
@@ -255,27 +266,26 @@ public class GUIController extends VBox {
         });
     }
 
-    void drawEvent(Button deck, Card c) throws Exception {
-        deck.setOnMousePressed(event -> {
-            try {
-                drawCard(c);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+    @FXML
+    void updateAvatar(int n){
+        Text txt = (Text) gameScene.lookup("#remainingCards");
+        String[] parts = txt.getText().split(" ");
+        txt.setText(parts[0] + String.valueOf(n));
     }
 
     @FXML
     void drawCard(Card c) throws Exception{
         if(uno.isMyTurn) {
-
             uno.isMyTurn = false;
             String myIp = player.utility.findIp()+":"+player.portRegistry;
+            uno.MyCard.add(c);
             int numCards = Integer.parseInt(uno.NumberAllPlayersCards.get(myIp).get(0));
 
             System.out.println("\nNumero delle mie carte: "+numCards);
 
             uno.NumberAllPlayersCards.get(myIp).set(0, String.valueOf(numCards+1));
+            updateAvatar(numCards+1);
+
             System.out.println("\nNumero delle mie carte: "+uno.NumberAllPlayersCards.get(myIp).get(0)+"\n");
             player.communicateCardPlayed(uno, c, true);
 
