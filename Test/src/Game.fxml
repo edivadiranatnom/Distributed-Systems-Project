@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Button?>
 <AnchorPane fx:id="gameMain" prefHeight="720.0" prefWidth="1080.0" stylesheets="@img/UnoStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Pane layoutX="40.0" layoutY="50.0" prefHeight="400.0" prefWidth="1000.0">
@@ -20,8 +21,18 @@
                 <VBox id="avatar6" layoutX="200.0" layoutY="350.0" prefHeight="100.0" prefWidth="100.0" />
             </children>
         </Pane>
+        <Button prefHeight="80.0" prefWidth="80.0" fx:id="skip" onAction="#skipAction">
+            Salta
+        </Button>
         <ScrollPane fx:id="myCards" style="-fx-padding: 0 0 15px 0" layoutY="500.0" prefHeight="220.0" prefWidth="1080.0">
             <content>
+                <Pane prefHeight="400.0" prefWidth="1080.0" fx:id="paneContainer">
+                    <children>
+                        <HBox prefHeight="200.0" prefWidth="1080.0" fx:id="firstRow" style="-fx-padding: 0 75px 0px 75px"><children></children></HBox>
+                        <HBox layoutY="200.0" prefHeight="200.0" prefWidth="1080.0" fx:id="secondRow" style="-fx-padding: 0 75px 0px 75px"><children></children></HBox>
+                    </children>
+                </Pane>
+
             </content>
         </ScrollPane>
     </children>

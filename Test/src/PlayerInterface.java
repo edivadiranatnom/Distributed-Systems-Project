@@ -13,5 +13,7 @@ public interface PlayerInterface extends Remote {
 
     void communicationCard(Game uno,Card cartagiocata) throws Exception;
 
-    void removeDrawedCard(Card card, String ip) throws Exception;
+    void removeDrawedCard(Game uno, String ip, int cartePescate) throws Exception;
+
+    void communicationTurn(Game uno) throws Exception;
 }

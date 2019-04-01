@@ -9,9 +9,10 @@ public class Game implements Serializable {
     public String giocatoreTurno;
     public boolean isMyTurn = false;
     public boolean giroOrario = true;
+    public boolean pescato = false;
     public String currentColor;
     public ArrayList<Card> MyCard = new ArrayList<>();
-     public HashMap<String, ArrayList<String>> NumberAllPlayersCards = new HashMap<>();
+    public HashMap<String, ArrayList<String>> NumberAllPlayersCards = new HashMap<>();
     private String leader;
 
     public Game() {

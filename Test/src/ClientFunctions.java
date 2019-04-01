@@ -1,4 +1,5 @@
 import UnoGame.*;
+import javafx.application.Platform;
 import javafx.scene.layout.VBox;
 
 import java.rmi.Naming;
@@ -74,7 +75,6 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
-        mioController.designCardCommunicated(cartaGiocata);
         System.out.println("Il turno E': "+mioController.uno.giroOrario);
         try {
             if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
@@ -88,23 +88,35 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mioController.designCardCommunicated(cartaGiocata);
     }
 
-    public void removeDrawedCard(Card card, String ip){
-        System.out.println("\nPlayer "+ ip +" ha pescato "+card.card+" "+card.color+"\n");
-        Card popped = mioController.uno.mazzo.pop();
-        System.out.println("\nPlayer "+ ip +" ha pescato "+popped.card+" "+popped.color);
-        mioController.uno.stampaCarte();
+    public void removeDrawedCard(Game uno, String ip, int cartePescate){
+        mioController.uno.mazzo = uno.mazzo;
+        System.out.println("il mazzo in c.f. è lungo: "+uno.mazzo.carddeck.size());
 
-        if( (popped.color.equals(card.color)) && (popped.card == card.card) ) {
-            int numCards = Integer.parseInt(mioController.uno.NumberAllPlayersCards.get(ip).get(0));
-            mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(numCards + 1));
-            mioController.updateAvatar(numCards + 1);
-        }else{
-            System.out.println("\nPORCODDIO");
-        }
+        int numCards = Integer.parseInt(mioController.uno.NumberAllPlayersCards.get(ip).get(0));
+        mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(numCards + cartePescate));
+        mioController.updateAvatar(numCards+cartePescate, ip, listIpPlayer.indexOf(ip));
 
         System.out.println("\nGiocatore: "+ip+" ora ha "+mioController.uno.NumberAllPlayersCards.get(ip).get(0)+" carte\n");
+    }
+
+    public void communicationTurn (Game uno) {
+        System.out.println("il giocatore ha skippato, è il turno di: "+uno.giocatoreTurno);
+        mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        try {
+            if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
+
+                mioController.uno.isMyTurn = true;
+                System.out.println("E' il mio turno dopo skip");
+            } else {
+                mioController.uno.isMyTurn = false;
+                System.out.println("Non è il mio turno dopo skip");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
