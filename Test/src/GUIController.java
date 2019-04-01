@@ -1,5 +1,3 @@
-import java.io.IOException;
-import java.security.Policy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,18 +6,20 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import UnoGame.*;
-import javafx.scene.shape.Line;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -68,7 +68,7 @@ public class GUIController extends VBox {
                 transition.play();
                 try {
                     uno.currentColor = cardGiocata.color;
-                    player.communicateCardPlayed(uno, cardGiocata);
+                    player.communicateCardPlayed(uno, cardGiocata, false);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -137,35 +137,72 @@ public class GUIController extends VBox {
         System.out.println("stampa del mio mazzo: \n");
         uno.stampaCarte();
 
-        Platform.runLater(()->{
+        Platform.runLater(()-> {
             Button vboxCentralCard = new Button();
+            Button deck = new Button();
             vboxCentralCard.getStyleClass().clear();
             vboxCentralCard.getStyleClass().add("card_background");
+
+            deck.getStyleClass().clear();
+            deck.getStyleClass().add("deck_background");
 
             vboxCentralCard.setLayoutX(400.0);
             vboxCentralCard.setLayoutY(150.0);
 
-            vboxCentralCard.setStyle("-fx-background-image: url('img/cards/"+uno.peekScarti().color+"/"+uno.peekScarti().background+"')");
+            deck.setLayoutX(200.0);
+            deck.setLayoutY(150.0);
+
+            vboxCentralCard.setStyle("-fx-background-image: url('img/cards/" + uno.peekScarti().color + "/" + uno.peekScarti().background + "')");
+            deck.setStyle("-fx-background-image: url('img/mazzo.png')");
+
+            try {
+                deck.setOnMousePressed(event -> {
+                    try {
+                        drawCard(uno.mazzo.pop());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            table.getChildren().add(deck);
             table.getChildren().add(vboxCentralCard);
         });
-        Platform.runLater(() -> {
+
+        Platform.runLater(()-> {
             HBox hBox = new HBox();
-            hBox.setPrefHeight(180.0);
+            hBox.setPrefHeight(400.0);
             hBox.setPrefWidth(1080.0);
             hBox.setLayoutX(0.0);
             hBox.setLayoutX(0.0);
             hBox.setSpacing(15.0);
-            hBox.setStyle("-fx-padding: 0 75px 0 75px");
             hBox.setId("hBox");
+            hBox.setStyle("-fx-padding: 0 0px 25px 0px");
+
+            HBox innerHBox = new HBox();
+            innerHBox.setPrefHeight(180.0);
+            innerHBox.setPrefWidth(1080.0);
+            innerHBox.setSpacing(15.0);
+            innerHBox.setLayoutX(0.0);
+            innerHBox.setLayoutY(0.0);
+            innerHBox.setStyle("-fx-padding: 0 75px 0 75px");
+            innerHBox.setId("innerHBox1");
+
+            hBox.getChildren().add(innerHBox);
+
             for (int i = 0; i < n; i++) {
                 Button vbox = new Button();
                 vbox.setStyle("-fx-background-image: url('img/cards/" + uno.MyCard.get(i).color + "/" + uno.MyCard.get(i).background + "')");
                 vbox.getStyleClass().clear();
                 vbox.getStyleClass().add("card_background");
-                hBox.getChildren().add(vbox);
-                vbox.setId(uno.MyCard.get(i).color+"_"+uno.MyCard.get(i).card);
-                trigEvent(vbox, hBox, uno.MyCard.get(i));
+                vbox.setId(uno.MyCard.get(i).color + " " + uno.MyCard.get(i).card);
+                innerHBox.getChildren().add(vbox);
+                vbox.setId(uno.MyCard.get(i).color + "_" + uno.MyCard.get(i).card);
+                trigEvent(vbox, innerHBox, uno.MyCard.get(i));
             }
+
             myCards.setContent(hBox);
             if (player.Client.iamleader) {
                 System.out.println("remove button");
@@ -173,6 +210,7 @@ public class GUIController extends VBox {
             }
         });
     }
+
     void trigEvent(Button vbox, HBox hBox, Card c){
         vbox.setOnMousePressed(event -> {
             System.out.println("Ho cliccato su: " + ((Control)event.getSource()).getId()+"\n");
@@ -183,7 +221,8 @@ public class GUIController extends VBox {
             }
         });
     }
-    void drawCardComunicated(Card cardToDraw){
+
+    void designCardCommunicated(Card cardToDraw){
         System.out.println("in cima al cimitero: "+uno.peekScarti().color + ", " + uno.peekScarti().card);
         System.out.println("Il colore corrente è: "+uno.currentColor);
         Platform.runLater(()-> {
@@ -204,8 +243,84 @@ public class GUIController extends VBox {
             transition.setNode(card);
             transition.setDuration(Duration.seconds(1.5));
             transition.setPath(polyline);
-            //transition.setCycleCount(PathTransition.INDEFINITE);
             transition.play();
         });
     }
+
+    @FXML
+    void createAvatar(String ip, int pos){
+        Platform.runLater(()-> {
+            String[] parts = ip.split(":");
+            String secondPart = parts[1];
+            Image image = new Image("img/avatar/"+uno.NumberAllPlayersCards.get(ip).get(1));
+            VBox vBox = (VBox) gameScene.lookup("#avatar"+pos);
+            vBox.setAlignment(Pos.BOTTOM_CENTER);
+            BackgroundSize backgroundSize = new BackgroundSize(50, 50, false, false, false, false);
+            Background background = new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
+            Text host = new Text("PORT: "+secondPart);
+            Text remainingCards = new Text("CARDS: "+uno.NumberAllPlayersCards.get(ip).get(0));
+            remainingCards.setId("remainingCards");
+            host.setFill(Color.WHITE);
+            remainingCards.setFill(Color.WHITE);
+            vBox.setBackground(background);
+            vBox.getChildren().add(host);
+            vBox.getChildren().add(remainingCards);
+        });
+    }
+
+    @FXML
+    void updateAvatar(int n){
+        Text txt = (Text) gameScene.lookup("#remainingCards");
+        String[] parts = txt.getText().split(" ");
+        txt.setText(parts[0] + String.valueOf(n));
+    }
+
+    @FXML
+    void drawCard(Card c) throws Exception{
+        if(uno.isMyTurn) {
+            uno.isMyTurn = false;
+            String myIp = player.utility.findIp()+":"+player.portRegistry;
+            uno.MyCard.add(c);
+            int numCards = Integer.parseInt(uno.NumberAllPlayersCards.get(myIp).get(0));
+
+            System.out.println("\nNumero delle mie carte: "+numCards);
+
+            uno.NumberAllPlayersCards.get(myIp).set(0, String.valueOf(numCards+1));
+            updateAvatar(numCards+1);
+
+            System.out.println("\nNumero delle mie carte: "+uno.NumberAllPlayersCards.get(myIp).get(0)+"\n");
+            player.communicateCardPlayed(uno, c, true);
+
+            Platform.runLater(()-> {
+                HBox innerHBox = new HBox();
+                innerHBox.setPrefHeight(180.0);
+                innerHBox.setPrefWidth(1080.0);
+                innerHBox.setSpacing(15.0);
+                innerHBox.setStyle("-fx-padding: 0 75px 0px 75px");
+                innerHBox.setId("innerHBox2");
+                innerHBox.setLayoutY(280.0);
+                innerHBox.setLayoutX(0.0);
+                HBox myCards = (HBox) gameScene.lookup("#hBox");
+                myCards.getChildren().add(innerHBox);
+                Button card = new Button();
+                card.getStyleClass().clear();
+                card.getStyleClass().add("card_background");
+                card.setLayoutX(200.0);
+                card.setLayoutY(150.0);
+                card.setStyle("-fx-background-image: url('img/cards/" + c.color + "/" + c.background + "')");
+                innerHBox.getChildren().add(card);
+                Polyline polyline = new Polyline();
+                polyline.getPoints().addAll(
+                        440.0, 280.0,
+                        -490.0, 280.0
+                );
+                PathTransition transition = new PathTransition();
+                transition.setNode(card);
+                transition.setDuration(Duration.seconds(1.5));
+                transition.setPath(polyline);
+                transition.play();
+            });
+        }
+    }
+
 }

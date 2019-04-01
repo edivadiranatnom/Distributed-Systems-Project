@@ -1,4 +1,6 @@
 import UnoGame.*;
+import javafx.scene.layout.VBox;
+
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -39,15 +41,18 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void cardDistribution(ArrayList<Card> playersCards) throws Exception {
         mioController.uno.MyCard = playersCards;
-
     }
 
     public void preStartGame(Game uno) throws Exception {
-        System.out.println("il mazzo passato è lungo: " + uno.mazzo.carddeck.size());
-        System.out.println("e il primo scarto è: " + uno.peekScarti().card + ", " + uno.peekScarti().color);
         mioController.uno.mazzo = uno.mazzo;
         mioController.uno.pushScarti(uno.peekScarti());
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
+        mioController.uno.NumberAllPlayersCards = uno.NumberAllPlayersCards;
+
+        for (String item : listIpPlayer) {
+            mioController.createAvatar(item, listIpPlayer.indexOf(item));
+        }
+
         mioController.uno.currentColor = uno.currentColor;
         try {
             if (mioController.uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
@@ -69,10 +74,11 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
-        mioController.drawCardComunicated(cartaGiocata);
+        mioController.designCardCommunicated(cartaGiocata);
         System.out.println("Il turno E': "+mioController.uno.giroOrario);
         try {
             if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
+
                 mioController.uno.isMyTurn = true;
                 System.out.println("E' il mio turno in c.f.");
             } else {
@@ -84,5 +90,21 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
     }
 
+    public void removeDrawedCard(Card card, String ip){
+        System.out.println("\nPlayer "+ ip +" ha pescato "+card.card+" "+card.color+"\n");
+        Card popped = mioController.uno.mazzo.pop();
+        System.out.println("\nPlayer "+ ip +" ha pescato "+popped.card+" "+popped.color);
+        mioController.uno.stampaCarte();
+
+        if( (popped.color.equals(card.color)) && (popped.card == card.card) ) {
+            int numCards = Integer.parseInt(mioController.uno.NumberAllPlayersCards.get(ip).get(0));
+            mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(numCards + 1));
+            mioController.updateAvatar(numCards + 1);
+        }else{
+            System.out.println("\nPORCODDIO");
+        }
+
+        System.out.println("\nGiocatore: "+ip+" ora ha "+mioController.uno.NumberAllPlayersCards.get(ip).get(0)+" carte\n");
+    }
 
 }
