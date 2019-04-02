@@ -10,6 +10,7 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
     private int random;
     public Game uno;
     public static ArrayList<String> listIp = new ArrayList<>();
+    public Utility utility = new Utility();
 
     public Connection(int numHostMax) throws RemoteException {
         super();
@@ -58,7 +59,6 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
             }
             if (max) {
                 System.out.println("Chiusura Server For Start");
-                //return leader;
             }
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());

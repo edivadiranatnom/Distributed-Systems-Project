@@ -18,7 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import UnoGame.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polyline;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -48,19 +50,19 @@ public class GUIController extends VBox {
     HBox firstRow, secondRow;
     @FXML
     Button skip;
+    @FXML
+    Pane outerTable;
 
     public void playCard(Button el, HBox parent, Card cardGiocata) {
         if(uno.isMyTurn) {
             if (rules.passport(uno, cardGiocata)) {
                 uno.isMyTurn = false;
-                System.out.println("è il mio turno  gioco: "+cardGiocata.card + ", " + cardGiocata.color);
                 uno.pushScarti(cardGiocata);
                 uno.MyCard.remove(uno.MyCard.indexOf(cardGiocata));
                 parent.getChildren().remove(el);
                 el.setLayoutX(100.0);
                 el.setLayoutY(700.0);
                 gameMain.getChildren().add(el);
-                // Transition
                 Polyline polyline= new Polyline();
 
                 polyline.getPoints().addAll(
@@ -72,27 +74,128 @@ public class GUIController extends VBox {
                 transition.setDuration(Duration.seconds(1.5));
                 transition.setPath(polyline);
                 transition.play();
-                System.out.println("N carte in NAPC: "+uno.NumberAllPlayersCards.get(uno.giocatoreTurno));
+
+                if(secondRow.getChildren().size()>0 && firstRow.getChildren().size()<7){
+                    int numCards = 7-firstRow.getChildren().size();
+                    for (int i = 0; i<numCards; i++){
+                        Node n = secondRow.getChildren().get(i);
+                        firstRow.getChildren().add(n);
+                    }
+                }
+
                 try {
                     player.updateMyCards(uno);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
-                try {
-                    uno.currentColor = cardGiocata.color;
-                    player.communicateCardPlayed(uno, cardGiocata);
-                    uno.pescato = false;
-                } catch (Exception e) {
-                    System.out.println(e);
+
+                if(cardGiocata.color.equals("black")){
+                    System.out.println("\n\nSONO DENTROOOOO\n\n");
+                    Pane chooseColor = new Pane ();
+                    chooseColor.setId("chooseColor");
+                    chooseColor.setLayoutX(185.0);
+                    chooseColor.setLayoutY(215.0);
+                    chooseColor.setPrefHeight(100.0);
+                    chooseColor.setPrefWidth(100.0);
+                    chooseColor.setStyle("-fx-padding: 5px 5px 5px 5px");
+                    chooseColor.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: white");
+                    Button c1 = new Button();
+                    c1.setPrefHeight(40.0);
+                    c1.setPrefWidth(40.0);
+                    c1.setLayoutX(10.0);
+                    c1.setLayoutY(10.0);
+                    c1.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: blue");
+                    chooseColor.getChildren().add(c1);
+                    c1.setOnAction(event -> {
+                        uno.currentColor = "blue";
+                        try {
+                            player.communicateCardPlayed(uno, cardGiocata);
+                            changeColor(uno.currentColor);
+                            Pane c = (Pane) gameScene.lookup("#chooseColor");
+                            outerTable.getChildren().remove(c);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    Button c2 = new Button();
+                    c2.setPrefHeight(40.0);
+                    c2.setPrefWidth(40.0);
+                    c2.setLayoutX(50.0);
+                    c2.setLayoutY(10.0);
+                    c2.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: green");
+                    chooseColor.getChildren().add(c2);
+                    c2.setOnAction(event -> {
+                        uno.currentColor = "green";
+                        try {
+                            player.communicateCardPlayed(uno, cardGiocata);
+                            changeColor(uno.currentColor);
+                            Pane c = (Pane) gameScene.lookup("#chooseColor");
+                            outerTable.getChildren().remove(c);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    Button c3 = new Button();
+                    c3.setPrefHeight(40.0);
+                    c3.setPrefWidth(40.0);
+                    c3.setLayoutX(10.0);
+                    c3.setLayoutY(50.0);
+                    c3.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: red");
+                    chooseColor.getChildren().add(c3);
+                    c3.setOnAction(event -> {
+                        uno.currentColor = "red";
+                        try {
+                            player.communicateCardPlayed(uno, cardGiocata);
+                            changeColor(uno.currentColor);
+                            Pane c = (Pane) gameScene.lookup("#chooseColor");
+                            outerTable.getChildren().remove(c);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    Button c4 = new Button();
+                    c4.setPrefHeight(40.0);
+                    c4.setPrefWidth(40.0);
+                    c4.setLayoutX(50.0);
+                    c4.setLayoutY(50.0);
+                    c4.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: yellow");
+                    chooseColor.getChildren().add(c4);
+                    c4.setOnAction(event -> {
+                        uno.currentColor = "yellow";
+                        try {
+                            player.communicateCardPlayed(uno, cardGiocata);
+                            changeColor(uno.currentColor);
+                            Pane c = (Pane) gameScene.lookup("#chooseColor");
+                            outerTable.getChildren().remove(c);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    outerTable.getChildren().add(chooseColor);
+                }else {
+                    try {
+                        uno.currentColor = cardGiocata.color;
+                        changeColor(uno.currentColor);
+                        player.communicateCardPlayed(uno, cardGiocata);
+                        uno.pescato = false;
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
                 }
             } else {
-                System.out.println("---------------------------------\n\n Non hai giocato una carta che non potevi giocare\n\n ---------------------------------");
+                System.out.println("---------------------------------\n\n Hai giocato una carta che non potevi giocare\n\n ---------------------------------");
 
             }
         } else {
             System.out.println("---------------------------------\n\n Non è il tuo turno\n\n ---------------------------------");
         }
+    }
+
+    @FXML
+    void changeColor(String color){
+        HBox c = (HBox) gameScene.lookup("#currentColor");
+        c.setStyle("-fx-background-color: "+color);
     }
 
     @FXML
@@ -131,6 +234,8 @@ public class GUIController extends VBox {
             }
             gameStage.setScene(gameScene);
             gameStage.show();
+            Text color = (Text) gameScene.lookup("#color");
+            color.setFill(Color.WHITE);
         } else {
             result.setText("Error");
         }
@@ -181,30 +286,27 @@ public class GUIController extends VBox {
                 e.printStackTrace();
             }
 
+            Button skip = new Button("Passa");
+            skip.setLayoutX(725.0);
+            skip.setLayoutY(175.0);
+            skip.getStyleClass().clear();
+            skip.setId("skipAction");
+            skip.getStyleClass().add("btn");
+            skip.setOnAction(event -> {
+                try {
+                    skipAction();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+
             table.getChildren().add(deck);
             table.getChildren().add(vboxCentralCard);
+            outerTable.getChildren().add(skip);
+
         });
 
         Platform.runLater(()-> {
-            /*HBox hBox = new HBox();
-            hBox.setPrefHeight(400.0);
-            hBox.setPrefWidth(1080.0);
-            hBox.setLayoutX(0.0);
-            hBox.setLayoutX(0.0);
-            hBox.setSpacing(15.0);
-            hBox.setId("hBox");
-            hBox.setStyle("-fx-padding: 0 0px 25px 0px");
-
-            HBox innerHBox = new HBox();
-            innerHBox.setPrefHeight(180.0);
-            innerHBox.setPrefWidth(1080.0);
-            innerHBox.setSpacing(15.0);
-            innerHBox.setLayoutX(0.0);
-            innerHBox.setLayoutY(0.0);
-            innerHBox.setStyle("-fx-padding: 0 75px 0 75px");
-            innerHBox.setId("innerHBox1");
-
-            hBox.getChildren().add(innerHBox);*/
             firstRow.setSpacing(15.0);
             secondRow.setSpacing(15.0);
 
@@ -296,7 +398,9 @@ public class GUIController extends VBox {
             BackgroundSize backgroundSize = new BackgroundSize(50, 50, false, false, false, false);
             Background background = new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
             Text host = new Text("PORT: " + secondPart);
+            host.setFont(Font.font("Roboto", 11));
             Text remainingCards = new Text("CARDS: " + uno.NumberAllPlayersCards.get(ip).get(0));
+            remainingCards.setFont(Font.font("Roboto", 11));
             remainingCards.setId("player_"+pos);
             host.setFill(Color.WHITE);
             remainingCards.setFill(Color.WHITE);
@@ -316,17 +420,6 @@ public class GUIController extends VBox {
     @FXML
     private void peekCard(int n) throws Exception{
         if(uno.isMyTurn && !uno.pescato) {
-
-            /*HBox innerHBox = new HBox();
-            innerHBox.setPrefHeight(180.0);
-            innerHBox.setPrefWidth(1080.0);
-            innerHBox.setSpacing(15.0);
-            innerHBox.setStyle("-fx-padding: 0 75px 0px 75px");
-            innerHBox.setId("innerHBox2");
-            innerHBox.setLayoutY(280.0);
-            innerHBox.setLayoutX(0.0);
-            //HBox myCards = (HBox) gameScene.lookup("#hBox");
-            //myCards.getChildren().add(innerHBox);*/
             Platform.runLater(()-> {
                 for (int i = 0; i < n; i++) {
                     Card c = uno.mazzo.pop();
@@ -359,9 +452,7 @@ public class GUIController extends VBox {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 updateAvatar(Integer.parseInt(arr.get(1)), arr.get(0), player.listIpPlayer.indexOf(arr.get(0)));
-                //player.communicateCardPlayed(uno, c);
             });
 
         } else {
@@ -388,13 +479,24 @@ public class GUIController extends VBox {
             System.out.println("non puoi skippare non è il tuo turno");
         }
     }
-    public void greenAvatar(int pos) {
+
+    void greenAvatar(int pos) {
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
-        vBox.setStyle("-fx-border-color: white");
+        Circle circle = new Circle(5.0f);
+        circle.setFill(Color.rgb(0,255,127));
+        circle.setId("turn");
+        circle.setCenterY(0.0);
+        Platform.runLater(()-> {
+            vBox.getChildren().add(circle);
+        });
     }
-    public void removeGreenAvatar(int pos) {
+
+    void removeGreenAvatar(int pos) {
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
-        vBox.setStyle("-fx-border-color: transparent");
+        Circle c = (Circle) gameScene.lookup("#turn");
+        Platform.runLater(()-> {
+                    vBox.getChildren().remove(c);
+        });
     }
 
 }

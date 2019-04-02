@@ -75,7 +75,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.pushScarti(cartaGiocata);
         mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
-        // communicationTurn(uno);
+        if(cartaGiocata.color.equals("black")){
+            mioController.changeColor(uno.currentColor);
+        }else mioController.changeColor(cartaGiocata.color);
         mioController.designCardCommunicated(cartaGiocata);
     }
 
@@ -85,8 +87,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
         int numCards = Integer.parseInt(mioController.uno.NumberAllPlayersCards.get(ip).get(0));
         mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(numCards + cartePescate));
-        mioController.updateAvatar(numCards+cartePescate, ip, listIpPlayer.indexOf(ip));
 
+        mioController.updateAvatar(numCards+cartePescate, ip, listIpPlayer.indexOf(ip));
         System.out.println("\nGiocatore: "+ip+" ora ha "+mioController.uno.NumberAllPlayersCards.get(ip).get(0)+" carte\n");
     }
 

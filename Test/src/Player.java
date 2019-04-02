@@ -71,17 +71,6 @@ public class Player {
         }
     }
 
-    /**
-     * entri solo se sei il leader
-     * inutile controllare con il mio ip
-     * poppa() localmente dal mazzo 7 carte alla volta, per ogni Client
-     * lookup su ogni Client: cardDistribution passando le sue 7 carte.
-     * Finito il giro ne parte un altro dove comunica a tutti:
-     *  - il turno
-     *  - il mazzo
-     *  - lo scarto
-     */
-
     Game distribute(Game uno) throws Exception {
         String leader = uno.getLeader();
         uno.mazzo.shuffle();
@@ -200,6 +189,7 @@ public class Player {
         arr.add(String.valueOf(numCards+cartePescate));
         return arr;
     }
+
     void skipTurn (Game uno) throws Exception{
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(uno.giocatoreTurno);
