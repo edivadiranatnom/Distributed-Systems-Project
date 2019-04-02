@@ -152,6 +152,9 @@ public class Player {
                 if(myIndex == 1){
                     System.out.println("Fine di merda, sono l'1. Setto a mano l'ultimo");
                     uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-1);
+                } else if(myIndex == 0){
+                    System.out.println("Fine di merda, sono l'1. Setto a mano l'ultimo");
+                    uno.giocatoreTurno = listIpPlayer.get(listIpPlayer.size()-2);
                 }
                 else {
                     uno.giocatoreTurno = listIpPlayer.get((myIndex-2)%nPlayers);
@@ -215,6 +218,17 @@ public class Player {
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
             stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
             stubPlayer.communicationTurn(uno);
+        }
+    }
+
+    public void updateMyCards(Game uno) throws Exception{
+        String myIp = utility.findIp()+":"+portRegistry;
+        uno.NumberAllPlayersCards.get(myIp).set(0, String.valueOf(uno.MyCard.size()));
+        int nPlayers = listIpPlayer.size();
+        int myIndex = listIpPlayer.indexOf(myIp);
+        for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
+            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+            stubPlayer.updateCards(uno, myIp);
         }
     }
 }

@@ -110,4 +110,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         }
     }
 
+    public void updateCards(Game uno, String ip) throws Exception {
+        mioController.uno.NumberAllPlayersCards.get(ip).set(0, String.valueOf(uno.MyCard.size()));
+        mioController.updateAvatar(uno.MyCard.size(), ip, listIpPlayer.indexOf(ip));
+    }
+
 }

@@ -40,3 +40,18 @@
 #myCards{
     -fx-background-color: transparent;
 }
+.color-transparent {
+    -fx-background-color: transparent;
+}
+.color-red {
+    -fx-background-color: red;
+}
+.color-blue {
+    -fx-background-color: blue;
+}
+.color-green {
+    -fx-background-color: green;
+}
+.color-yellow {
+    -fx-background-color: yellow;
+}

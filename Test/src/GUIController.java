@@ -43,7 +43,7 @@ public class GUIController extends VBox {
     @FXML
     HBox table;
     @FXML
-    Pane paneContainer;
+    Pane paneContainer, colorPanel;
     @FXML
     HBox firstRow, secondRow;
     @FXML
@@ -72,7 +72,12 @@ public class GUIController extends VBox {
                 transition.setDuration(Duration.seconds(1.5));
                 transition.setPath(polyline);
                 transition.play();
-                System.out.println("pos di avatar in playcard: "+player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
+                System.out.println("N carte in NAPC: "+uno.NumberAllPlayersCards.get(uno.giocatoreTurno));
+                try {
+                    player.updateMyCards(uno);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
                 try {
                     uno.currentColor = cardGiocata.color;
@@ -258,9 +263,10 @@ public class GUIController extends VBox {
             // se è il mio turno e quello prima mi ha giocato un +2 o + 4 me le pesco.
             if (uno.isMyTurn) {
                 if (cardToDraw.card == 14) {
-                    System.out.println("Devi pescare 4 carte");
                     try {
                         peekCard(4);
+                        System.out.println("Ho pescato 4 carte: "+uno.MyCard.size());
+                        player.updateMyCards(uno);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -268,6 +274,9 @@ public class GUIController extends VBox {
                     System.out.println("Devi pescare 2 carte");
                     try {
                         peekCard(2);
+                        System.out.println("Ho pescato 2 carte: "+uno.MyCard.size());
+                        player.updateMyCards(uno);
+
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -368,7 +377,7 @@ public class GUIController extends VBox {
         System.out.println("Il turno ora è di "+uno.giocatoreTurno +"\n Cambia turno!");
         if (uno.isMyTurn){
             try {
-                System.out.println("pos di avatar in skip: "+player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
+                uno.pescato = false;
                 removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
                 player.skipTurn(uno);
             } catch (Exception e) {
@@ -380,12 +389,10 @@ public class GUIController extends VBox {
         }
     }
     public void greenAvatar(int pos) {
-        System.out.println("PORCCCODDDIIIOOOOOO: "+pos);
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
         vBox.setStyle("-fx-border-color: white");
     }
     public void removeGreenAvatar(int pos) {
-        System.out.println("RICHIMAO UNA FUNZ SU ME STESSO");
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
         vBox.setStyle("-fx-border-color: transparent");
     }

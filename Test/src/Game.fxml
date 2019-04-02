@@ -21,6 +21,7 @@
                 <VBox id="avatar6" layoutX="200.0" layoutY="350.0" prefHeight="100.0" prefWidth="100.0" />
             </children>
         </Pane>
+        <Pane prefHeight="25.0" prefWidth="25.0" fx:id="colorPanel" layoutX="800.0" layoutY="100" styleClass="color-transparent"/>
         <Button prefHeight="80.0" prefWidth="80.0" fx:id="skip" onAction="#skipAction">
             Salta
         </Button>
