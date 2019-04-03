@@ -91,7 +91,6 @@ public class GUIController extends VBox {
                 removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
 
                 if(cardGiocata.color.equals("black")){
-                    System.out.println("\n\nSONO DENTROOOOO\n\n");
                     Pane chooseColor = new Pane ();
                     chooseColor.setId("chooseColor");
                     chooseColor.setLayoutX(185.0);
@@ -100,78 +99,23 @@ public class GUIController extends VBox {
                     chooseColor.setPrefWidth(100.0);
                     chooseColor.setStyle("-fx-padding: 5px 5px 5px 5px");
                     chooseColor.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: white");
+
                     Button c1 = new Button();
-                    c1.setPrefHeight(40.0);
-                    c1.setPrefWidth(40.0);
-                    c1.setLayoutX(10.0);
-                    c1.setLayoutY(10.0);
-                    c1.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: blue");
+                    colorClick(c1, "blue", cardGiocata, 10.0, 10.0);
                     chooseColor.getChildren().add(c1);
-                    c1.setOnAction(event -> {
-                        uno.currentColor = "blue";
-                        try {
-                            player.communicateCardPlayed(uno, cardGiocata);
-                            changeColor(uno.currentColor);
-                            Pane c = (Pane) gameScene.lookup("#chooseColor");
-                            outerTable.getChildren().remove(c);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+
                     Button c2 = new Button();
-                    c2.setPrefHeight(40.0);
-                    c2.setPrefWidth(40.0);
-                    c2.setLayoutX(50.0);
-                    c2.setLayoutY(10.0);
-                    c2.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: green");
+                    colorClick(c2, "green", cardGiocata, 50.0, 10.0);
                     chooseColor.getChildren().add(c2);
-                    c2.setOnAction(event -> {
-                        uno.currentColor = "green";
-                        try {
-                            player.communicateCardPlayed(uno, cardGiocata);
-                            changeColor(uno.currentColor);
-                            Pane c = (Pane) gameScene.lookup("#chooseColor");
-                            outerTable.getChildren().remove(c);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+
                     Button c3 = new Button();
-                    c3.setPrefHeight(40.0);
-                    c3.setPrefWidth(40.0);
-                    c3.setLayoutX(10.0);
-                    c3.setLayoutY(50.0);
-                    c3.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: red");
+                    colorClick(c3, "red", cardGiocata, 10.0, 50.0);
                     chooseColor.getChildren().add(c3);
-                    c3.setOnAction(event -> {
-                        uno.currentColor = "red";
-                        try {
-                            player.communicateCardPlayed(uno, cardGiocata);
-                            changeColor(uno.currentColor);
-                            Pane c = (Pane) gameScene.lookup("#chooseColor");
-                            outerTable.getChildren().remove(c);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+
                     Button c4 = new Button();
-                    c4.setPrefHeight(40.0);
-                    c4.setPrefWidth(40.0);
-                    c4.setLayoutX(50.0);
-                    c4.setLayoutY(50.0);
-                    c4.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: yellow");
+                    colorClick(c4, "yellow", cardGiocata, 50.0, 50.0);
                     chooseColor.getChildren().add(c4);
-                    c4.setOnAction(event -> {
-                        uno.currentColor = "yellow";
-                        try {
-                            player.communicateCardPlayed(uno, cardGiocata);
-                            changeColor(uno.currentColor);
-                            Pane c = (Pane) gameScene.lookup("#chooseColor");
-                            outerTable.getChildren().remove(c);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+
                     outerTable.getChildren().add(chooseColor);
                 }else {
                     try {
@@ -190,6 +134,26 @@ public class GUIController extends VBox {
         } else {
             System.out.println("---------------------------------\n\n Non è il tuo turno\n\n ---------------------------------");
         }
+    }
+
+    @FXML
+    void colorClick(Button button, String color, Card card, double X, double Y){
+        button.setPrefHeight(40.0);
+        button.setPrefWidth(40.0);
+        button.setLayoutX(X);
+        button.setLayoutY(Y);
+        button.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: "+color);
+        button.setOnAction(event -> {
+            uno.currentColor = color;
+            try {
+                player.communicateCardPlayed(uno, card);
+                changeColor(uno.currentColor);
+                Pane c = (Pane) gameScene.lookup("#chooseColor");
+                outerTable.getChildren().remove(c);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML

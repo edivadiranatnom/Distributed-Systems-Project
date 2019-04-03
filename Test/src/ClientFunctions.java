@@ -75,9 +75,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.pushScarti(cartaGiocata);
         mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
-        if(cartaGiocata.color.equals("black")){
-            mioController.changeColor(uno.currentColor);
-        }else mioController.changeColor(cartaGiocata.color);
+//        if(cartaGiocata.color.equals("black")){
+        mioController.changeColor(uno.currentColor);
+//        }else mioController.changeColor(cartaGiocata.color);
         mioController.designCardCommunicated(cartaGiocata);
     }
 
