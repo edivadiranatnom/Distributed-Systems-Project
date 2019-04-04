@@ -90,6 +90,11 @@ public class GUIController extends VBox {
                 }
                 removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
 
+                if (uno.pescato){
+                    Button b = (Button) gameScene.lookup("#skipAction");
+                    outerTable.getChildren().remove(b);
+                }
+
                 if(cardGiocata.color.equals("black")){
                     Pane chooseColor = new Pane ();
                     chooseColor.setId("chooseColor");
@@ -120,7 +125,12 @@ public class GUIController extends VBox {
                 }else {
                     try {
                         uno.currentColor = cardGiocata.color;
-                        changeColor(uno.currentColor);
+                        String rgb = "";
+                        if(uno.currentColor.equals("red")) rgb = "#FF5555";
+                        else if(uno.currentColor.equals("green")) rgb = "#55AA55";
+                        else if(uno.currentColor.equals("blue")) rgb = "#5654FF";
+                        else if(uno.currentColor.equals("yellow")) rgb = "#FFAA01";
+                        changeColor(rgb);
                         player.communicateCardPlayed(uno, cardGiocata);
                         uno.pescato = false;
                     } catch (Exception e) {
@@ -142,7 +152,12 @@ public class GUIController extends VBox {
         button.setPrefWidth(40.0);
         button.setLayoutX(X);
         button.setLayoutY(Y);
-        button.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: "+color);
+        String rgb = "";
+        if(color.equals("red")) rgb = "#FF5555";
+        else if(color.equals("green")) rgb = "#55AA55";
+        else if(color.equals("blue")) rgb = "#5654FF";
+        else if(color.equals("yellow")) rgb = "#FFAA01";
+        button.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: "+rgb);
         button.setOnAction(event -> {
             uno.currentColor = color;
             try {
@@ -159,7 +174,7 @@ public class GUIController extends VBox {
     @FXML
     void changeColor(String color){
         HBox c = (HBox) gameScene.lookup("#currentColor");
-        c.setStyle("-fx-background-color: "+color);
+        c.setStyle("-fx-background-color: "+color+"; -fx-background-radius: 5px");
     }
 
     @FXML
@@ -198,8 +213,6 @@ public class GUIController extends VBox {
             }
             gameStage.setScene(gameScene);
             gameStage.show();
-            Text color = (Text) gameScene.lookup("#color");
-            color.setFill(Color.WHITE);
         } else {
             result.setText("Error");
         }
@@ -235,11 +248,14 @@ public class GUIController extends VBox {
             deck.setLayoutX(200.0);
             deck.setLayoutY(150.0);
 
-            vboxCentralCard.setStyle("-fx-background-image: url('img/cards/" + uno.peekScarti().color + "/" + uno.peekScarti().background + "')");
+            Card scarto = uno.peekScarti();
+
+            vboxCentralCard.setStyle("-fx-background-image: url('img/cards/" + scarto.color + "/" + scarto.background + "')");
             deck.setStyle("-fx-background-image: url('img/mazzo.png')");
 
             try {
                 deck.setOnMousePressed(event -> {
+                    if(uno.isMyTurn) drawSkip();
                     try {
                         peekCard(1);
                     } catch (Exception ex) {
@@ -250,23 +266,34 @@ public class GUIController extends VBox {
                 e.printStackTrace();
             }
 
-            Button skip = new Button("Passa");
-            skip.setLayoutX(725.0);
-            skip.setLayoutY(175.0);
-            skip.getStyleClass().clear();
-            skip.setId("skipAction");
-            skip.getStyleClass().add("btn");
-            skip.setOnAction(event -> {
-                try {
-                    skipAction();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-
             table.getChildren().add(deck);
             table.getChildren().add(vboxCentralCard);
-            outerTable.getChildren().add(skip);
+
+            Pane p =  (Pane) gameScene.lookup("#parentColor");
+            HBox h = new HBox();
+            h.setPrefHeight(10.0);
+            h.setPrefWidth(50.0);
+            h.setLayoutX(0.0);
+            h.setLayoutY(0.0);
+            h.setStyle("-fx-alignment: center");
+            Text t = new Text("COLOR");
+            t.setId("color");
+            t.setFill(Color.WHITE);
+            HBox hb = new HBox();
+            hb.setId("currentColor");
+            hb.setPrefHeight(40.0);
+            hb.setPrefWidth(50.0);
+            hb.setLayoutX(0.0);
+            hb.setLayoutY(15.0);
+            String rgb = "";
+            if(scarto.color.equals("red")) rgb = "#FF5555";
+            else if(scarto.color.equals("green")) rgb = "#55AA55";
+            else if(scarto.color.equals("blue")) rgb = "#5654FF";
+            else if(scarto.color.equals("yellow")) rgb = "#FFAA01";
+            hb.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-border-radius: 5px; -fx-background-radius: 5px ; -fx-background-color: "+rgb);
+            h.getChildren().add(t);
+            p.getChildren().add(h);
+            p.getChildren().add(hb);
 
         });
 
@@ -291,6 +318,23 @@ public class GUIController extends VBox {
                 table.getChildren().remove(table.lookup("#distribuisci"));
             }
         });
+    }
+
+    void drawSkip(){
+        Button skip = new Button("Passa");
+        skip.setLayoutX(725.0);
+        skip.setLayoutY(175.0);
+        skip.getStyleClass().clear();
+        skip.setId("skipAction");
+        skip.getStyleClass().add("btn");
+        skip.setOnAction(e -> {
+            try {
+                skipAction();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        outerTable.getChildren().add(skip);
     }
 
     void trigEvent(Button vbox, HBox hBox, Card c){
@@ -421,8 +465,16 @@ public class GUIController extends VBox {
 
         } else {
             if (uno.pescato) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Draw Error");
+                alert.setContentText("Non puoi pescare più di una carta");
+                alert.showAndWait();
                 System.out.println("Non puoi pescare più di una carta");
-            } else if (!uno.isMyTurn) { // non dire cazzate
+            } else if (!uno.isMyTurn) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Turn Error");
+                alert.setContentText("Non è il tuo turno");
+                alert.showAndWait();
                 System.out.println("non è il tuo turno");
             }
         }
@@ -432,6 +484,8 @@ public class GUIController extends VBox {
         System.out.println("Il turno ora è di "+uno.giocatoreTurno +"\n Cambia turno!");
         if (uno.isMyTurn){
             try {
+                Button b = (Button) gameScene.lookup("#skipAction");
+                outerTable.getChildren().remove(b);
                 uno.pescato = false;
                 removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
                 player.skipTurn(uno);
@@ -440,6 +494,11 @@ public class GUIController extends VBox {
             }
         }
         else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Skip Error");
+            alert.setContentText("Non puoi passare se non è il tuo turno");
+            alert.showAndWait();
+
             System.out.println("non puoi skippare non è il tuo turno");
         }
     }

@@ -89,7 +89,17 @@ public class Player {
             uno.NumberAllPlayersCards.put(listIpPlayer.get(i), tuple);
         }
         // prima carta sul tavolo.
-        uno.pushScarti(uno.mazzo.pop());
+
+        ///////////////////// Controllo che non sia una nera la prima carta estratta come scarto
+        Card scarto;
+        do{
+            scarto = uno.mazzo.pop();
+            uno.mazzo.push(scarto);
+        }
+        while(scarto.color == "black");
+        /////////////////////
+
+        uno.pushScarti(scarto);
         uno.currentColor = uno.peekScarti().color;
         uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
 

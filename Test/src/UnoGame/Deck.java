@@ -53,6 +53,10 @@ public class Deck implements Serializable {
         return c;
     }
 
+    public void push(Card c){
+        carddeck.add(c);
+    }
+
     public void shuffle(){
         Random rgen = new Random();
 
