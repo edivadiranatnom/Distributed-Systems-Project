@@ -88,18 +88,19 @@ public class Player {
             tuple.add(i % nPlayers + ".png");
             uno.NumberAllPlayersCards.put(listIpPlayer.get(i), tuple);
         }
+
         // prima carta sul tavolo.
+        Card scarto = new Card();
 
-        ///////////////////// Controllo che non sia una nera la prima carta estratta come scarto
-        Card scarto;
-        do{
-            scarto = uno.mazzo.pop();
-            uno.mazzo.push(scarto);
+        for (int h = 0; h<uno.mazzo.carddeck.size(); h++) {
+            if ((uno.mazzo.carddeck.get(h).color.equals("black")) || (uno.mazzo.carddeck.get(h).card == 10) || (uno.mazzo.carddeck.get(h).card == 11) || (uno.mazzo.carddeck.get(h).card == 12)) {
+                continue;
+            }
+            scarto = uno.mazzo.carddeck.get(h);
+            break;
         }
-        while(scarto.color == "black");
-        /////////////////////
-
         uno.pushScarti(scarto);
+        uno.mazzo.carddeck.remove(scarto);
         uno.currentColor = uno.peekScarti().color;
         uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
 

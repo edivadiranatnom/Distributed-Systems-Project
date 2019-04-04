@@ -109,7 +109,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
                 mioController.uno.isMyTurn = false;
                 System.out.println("Non è il mio turno");
             }
-
+            mioController.handlePingOnPlayerTurn();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,4 +120,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.updateAvatar(uno.MyCard.size(), ip, listIpPlayer.indexOf(ip));
     }
 
+
+    public String ping ()  throws Exception {
+        return "Pong";
+    }
 }

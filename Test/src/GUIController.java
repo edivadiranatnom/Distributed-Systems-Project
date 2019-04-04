@@ -1,5 +1,7 @@
+import java.rmi.Naming;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
 
 import javafx.animation.PathTransition;
 import javafx.application.Platform;
@@ -28,12 +30,15 @@ import javafx.util.Duration;
 public class GUIController extends VBox {
     public HashMap<String, ArrayList<Card>> CopiaCard = new HashMap<>();
     public Game uno;
+    private static Utility utility = new Utility();
     public Rules rules = new Rules();
     FXMLLoader gameLoader;
     Parent gameRoot;
     Scene gameScene;
     Stage gameStage;
     Player player;
+    Timer pingTimer = new Timer();
+    PlayerInterface stub;
     @FXML
     TextField inputIp;
     @FXML
@@ -514,6 +519,24 @@ public class GUIController extends VBox {
         });
     }
 
+    void redAvatar(int pos) {
+        VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+        Circle circle = new Circle(5.0f);
+        circle.setFill(Color.rgb(255,0,0));
+        circle.setId("turn");
+        circle.setCenterY(0.0);
+        Platform.runLater(()-> {
+            vBox.getChildren().add(circle);
+        });
+        vBox.setId("death");
+        for (int i = 0; i<=player.listIpPlayer.size(); i++) {
+            if(i>pos) {
+                VBox tmp = (VBox) gameScene.lookup("#avatar" + i);
+                tmp.setId("avatar"+(i-1));
+            }
+        }
+    }
+
     void removeGreenAvatar(int pos) {
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
         Circle c = (Circle) gameScene.lookup("#turn");
@@ -521,5 +544,85 @@ public class GUIController extends VBox {
                     vBox.getChildren().remove(c);
         });
     }
+    ///
 
+    void handlePingOnPlayerTurn () throws Exception{
+        try {
+            pingTimer.cancel();
+            pingTimer.purge();
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+        stub = (PlayerInterface) Naming.lookup("rmi://"+ uno.giocatoreTurno + "/ciao");
+
+        if (!uno.isMyTurn) {
+            pingTimer = new Timer();
+            pingTimer.schedule(new Ping(pingTimer, stub, this), 3000, 1000);
+
+        }
+    }
+
+    void bar() {
+        // controlla che ci siano alemno 2/3 player.
+        // riassegna il turno.
+        // elimina il player caduto da player.listIpPlayer e da  player.NumberAllPlayersCards
+        // togli avatar
+        // update grafica con pallino verde ecc..
+
+        System.out.println("Il turnista è caduto: "+uno.giocatoreTurno);
+        uno.numAllDeath ++;
+
+
+        // CAMBIO TURNO
+        String playerDead = uno.giocatoreTurno;
+
+        removeGreenAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // tolgo il pallino verde a quello che è caduto
+        redAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // aggiungo il pallino rosso a quello che è caduto
+        int nPlayers = player.listIpPlayer.size();
+        int myIndex = player.listIpPlayer.indexOf(uno.giocatoreTurno);
+        if (uno.giroOrario) {
+            uno.giocatoreTurno = player.listIpPlayer.get((myIndex + 1) % nPlayers);
+        } else {
+            if(myIndex == 0){
+                System.out.println("Sono lo 0. Setto a mano l'ultimo");
+                uno.giocatoreTurno = player.listIpPlayer.get(player.listIpPlayer.size()-1);
+            }
+            else {
+                uno.giocatoreTurno = player.listIpPlayer.get((myIndex-1)%nPlayers);
+            }
+        }
+        try {
+            if (uno.giocatoreTurno.equals(utility.findIp()+":"+player.portRegistry)) {
+
+                uno.isMyTurn = true;
+                System.out.println("E' il mio turno");
+            } else {
+                uno.isMyTurn = false;
+                System.out.println("Non è il mio turno, è il turno di: "+uno.giocatoreTurno);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //greenAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // aggiungo il pallino verde al nuovo turnista
+
+
+        // RIMUOVO IL PLAYER CADUTO
+        System.out.println("prima c'erano "+player.listIpPlayer.size());
+        player.listIpPlayer.remove(playerDead);
+        System.out.println("ora ce ne sono "+player.listIpPlayer.size());
+
+        // CONTROLLO CHE CI SIANO ALMENO 2/3 PLAYER.
+        if (player.listIpPlayer.size() < 3) {
+            System.out.println("Non ci sono abbstanza giocatori. MI CHIUDO");
+            System.exit(0);
+        }
+
+        // riparte
+        try {
+            handlePingOnPlayerTurn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

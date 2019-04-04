@@ -18,4 +18,6 @@ public interface PlayerInterface extends Remote {
     void communicationTurn(Game uno) throws Exception;
 
     void updateCards(Game uno, String ip) throws Exception;
+
+    String ping ()  throws Exception;
 }

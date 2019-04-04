@@ -11,6 +11,7 @@ public class Game implements Serializable {
     public boolean giroOrario = true;
     public boolean pescato = false;
     public String currentColor;
+    public int numAllDeath = 0;
     public ArrayList<Card> MyCard = new ArrayList<>();
     public HashMap<String, ArrayList<String>> NumberAllPlayersCards = new HashMap<>();
     private String leader;
