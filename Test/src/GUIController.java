@@ -520,19 +520,31 @@ public class GUIController extends VBox {
     }
 
     void redAvatar(int pos) {
+        System.out.println("E' morto l'avatar in posizione "+pos);
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
         Circle circle = new Circle(5.0f);
         circle.setFill(Color.rgb(255,0,0));
-        circle.setId("turn");
+        circle.setId("circle_death_"+pos);
         circle.setCenterY(0.0);
         Platform.runLater(()-> {
             vBox.getChildren().add(circle);
         });
-        vBox.setId("death");
-        for (int i = 0; i<=player.listIpPlayer.size(); i++) {
+        vBox.setId("death"+pos);
+        for (int i = 0; i<player.listIpPlayer.size(); i++) {
             if(i>pos) {
                 VBox tmp = (VBox) gameScene.lookup("#avatar" + i);
                 tmp.setId("avatar"+(i-1));
+            }
+        }
+    }
+
+    void updateAvatarTextPos(int pos) {
+        Text txt = (Text) gameScene.lookup("#player_" + pos);
+        txt.setId("death_text"+pos);
+        for (int i = 0; i<player.listIpPlayer.size(); i++) {
+            if(i>pos) {
+                Text tmp = (Text) gameScene.lookup("#player_" + i);
+                tmp.setId("player_"+(i-1));
             }
         }
     }
@@ -578,6 +590,7 @@ public class GUIController extends VBox {
 
         removeGreenAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // tolgo il pallino verde a quello che è caduto
         redAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // aggiungo il pallino rosso a quello che è caduto
+        updateAvatarTextPos(player.listIpPlayer.indexOf(uno.giocatoreTurno)); //aggiorno l'id del testo degli avatar
         int nPlayers = player.listIpPlayer.size();
         int myIndex = player.listIpPlayer.indexOf(uno.giocatoreTurno);
         if (uno.giroOrario) {
