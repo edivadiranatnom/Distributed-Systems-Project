@@ -22,10 +22,6 @@
             </children>
         </Pane>
         <Pane fx:id="parentColor" prefHeight="50.0" prefWidth="50.0" layoutX="250.0" layoutY="207.5">
-            <!--<HBox prefHeight="10.0" prefWidth="50.0" layoutX="0.0" layoutY="0.0" style="-fx-alignment: center">-->
-                <!--<Text fx:id="color">COLOR</Text>-->
-            <!--</HBox>-->
-            <!--<HBox fx:id="currentColor" prefHeight="40.0" prefWidth="50.0" layoutX="0.0" layoutY="15.0" style="-fx-border-width: 1px; -fx-border-color: grey; -fx-border-radius: 5px"></HBox>-->
         </Pane>
         <ScrollPane fx:id="myCards" style="-fx-padding: 0 0 15px 0" layoutY="500.0" prefHeight="220.0" prefWidth="1080.0">
             <content>

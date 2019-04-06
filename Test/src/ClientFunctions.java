@@ -52,6 +52,11 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
         for (String item : listIpPlayer) {
             mioController.createAvatar(item, listIpPlayer.indexOf(item));
+            if((utility.findIp()+":"+mioController.player.portRegistry).equals(item)) {
+                System.out.println("\npreStartGame avatar" + listIpPlayer.indexOf(item)+"\n");
+                VBox v = (VBox) mioController.gameScene.lookup("#avatar" + listIpPlayer.indexOf(item));
+                v.setStyle("-fx-border-width: 2px; -fx-border-color: grey; -fx-border-radius: 50px");
+            }
         }
         mioController.greenAvatar(0);
 
@@ -67,6 +72,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
                 System.out.println("Non è il mio turno: "+mioController.uno.giocatoreTurno);
 
             }
+            mioController.handlePingOnPlayerTurn();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,4 +130,9 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
     public String ping ()  throws Exception {
         return "Pong";
     }
+    public void loser(String res){
+        System.out.println("\nLOSER in loser\n");
+        mioController.terminate(res);
+    }
+
 }

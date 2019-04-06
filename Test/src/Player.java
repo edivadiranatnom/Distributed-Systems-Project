@@ -88,7 +88,6 @@ public class Player {
             tuple.add(i % nPlayers + ".png");
             uno.NumberAllPlayersCards.put(listIpPlayer.get(i), tuple);
         }
-
         // prima carta sul tavolo.
         Card scarto = new Card();
 
@@ -172,6 +171,7 @@ public class Player {
                 stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
                 stubPlayer.communicationTurn(uno);
             }
+
             for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
                 stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
                 stubPlayer.communicationCard(uno, cartagiocata);
@@ -230,6 +230,16 @@ public class Player {
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
             stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
             stubPlayer.updateCards(uno, myIp);
+        }
+    }
+
+    public void terminate(Game uno, String res) throws Exception{
+        int nPlayers = listIpPlayer.size();
+        int myIndex = listIpPlayer.indexOf(uno.giocatoreTurno);
+        for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
+            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+            System.out.println("\nLOSER in terminate\n");
+            stubPlayer.loser(res);
         }
     }
 }

@@ -20,4 +20,6 @@ public interface PlayerInterface extends Remote {
     void updateCards(Game uno, String ip) throws Exception;
 
     String ping ()  throws Exception;
+
+    void loser(String res) throws Exception;
 }

@@ -58,6 +58,25 @@ public class GUIController extends VBox {
     @FXML
     Pane outerTable;
 
+    public void terminate(String res){
+        try {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("End Game");
+                if (res.equals("winner")) {
+                    alert.setContentText("Hai vinto!");
+                    System.out.println("\nHai vinto\n");
+                } else if (res.equals("loser")) {
+                    alert.setContentText("Hai perso :(");
+                    System.out.println("\nHai perso\n");
+                }
+                alert.showAndWait();
+                System.out.println("\nFINE PARTITA\n");
+                gameStage.close();
+            });
+        }catch(Exception e){}
+    }
+
     public void playCard(Button el, HBox parent, Card cardGiocata) {
         if(uno.isMyTurn) {
             if (rules.passport(uno, cardGiocata)) {
@@ -79,6 +98,17 @@ public class GUIController extends VBox {
                 transition.setDuration(Duration.seconds(1.5));
                 transition.setPath(polyline);
                 transition.play();
+
+                if(uno.MyCard.isEmpty()){
+                    try {
+                        player.terminate(uno, "loser");
+                        System.out.println("\nLOSER in playCard\n");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("\nWINNER in playCard\n");
+                    terminate("winner");
+                }
 
                 if(secondRow.getChildren().size()>0 && firstRow.getChildren().size()<7){
                     int numCards = 7-firstRow.getChildren().size();
@@ -150,7 +180,6 @@ public class GUIController extends VBox {
             System.out.println("---------------------------------\n\n Non è il tuo turno\n\n ---------------------------------");
         }
     }
-
     @FXML
     void colorClick(Button button, String color, Card card, double X, double Y){
         button.setPrefHeight(40.0);
@@ -163,11 +192,12 @@ public class GUIController extends VBox {
         else if(color.equals("blue")) rgb = "#5654FF";
         else if(color.equals("yellow")) rgb = "#FFAA01";
         button.setStyle("-fx-border-width: 1px; -fx-border-color: grey; -fx-background-color: "+rgb);
+        String finalRgb = rgb;
         button.setOnAction(event -> {
             uno.currentColor = color;
             try {
                 player.communicateCardPlayed(uno, card);
-                changeColor(uno.currentColor);
+                changeColor(finalRgb);
                 Pane c = (Pane) gameScene.lookup("#chooseColor");
                 outerTable.getChildren().remove(c);
             } catch (Exception e) {
@@ -187,7 +217,7 @@ public class GUIController extends VBox {
 
         player = new Player();
         uno = new Game();
-        if ((inputIp.getText() != null && !inputIp.getText().isEmpty())) {
+        if ((inputIp.getText() != null && !inputIp.getText().isEmpty() && (inputIp.getText().contains("192.168") || inputIp.getText().contains("10.") || inputIp.getText().contains("172.")))) {
             uno = player.startPlayer(inputIp.getText(), this);
             result.setText("Connected");
             gameLoader = new FXMLLoader(getClass().getResource("Game.fxml"));
@@ -345,6 +375,11 @@ public class GUIController extends VBox {
     void trigEvent(Button vbox, HBox hBox, Card c){
         vbox.setOnMousePressed(event -> {
             System.out.println("Ho cliccato su: " + ((Control)event.getSource()).getId()+"\n");
+            if(c.card != uno.peekScarti().card || (!c.color.equals(uno.peekScarti().color))){
+                Tooltip tooltip = new Tooltip();
+                tooltip.setText("\nNon puoi giocare questa carta\n");
+                vbox.setTooltip(tooltip);
+            }
             try {
                 playCard(vbox, hBox, c);
             } catch (Exception ex) {
@@ -556,7 +591,6 @@ public class GUIController extends VBox {
                     vBox.getChildren().remove(c);
         });
     }
-    ///
 
     void handlePingOnPlayerTurn () throws Exception{
         try {
@@ -570,7 +604,6 @@ public class GUIController extends VBox {
         if (!uno.isMyTurn) {
             pingTimer = new Timer();
             pingTimer.schedule(new Ping(pingTimer, stub, this), 3000, 1000);
-
         }
     }
 
@@ -587,6 +620,12 @@ public class GUIController extends VBox {
 
         // CAMBIO TURNO
         String playerDead = uno.giocatoreTurno;
+
+        // CONTROLLO CHE CI SIANO ALMENO 2/3 PLAYER.
+        if (player.listIpPlayer.size() < 3) {
+            System.out.println("Non ci sono abbstanza giocatori. MI CHIUDO");
+            System.exit(0);
+        }
 
         removeGreenAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // tolgo il pallino verde a quello che è caduto
         redAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // aggiungo il pallino rosso a quello che è caduto
@@ -617,19 +656,12 @@ public class GUIController extends VBox {
             e.printStackTrace();
         }
 
-        //greenAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // aggiungo il pallino verde al nuovo turnista
-
-
         // RIMUOVO IL PLAYER CADUTO
         System.out.println("prima c'erano "+player.listIpPlayer.size());
         player.listIpPlayer.remove(playerDead);
         System.out.println("ora ce ne sono "+player.listIpPlayer.size());
 
-        // CONTROLLO CHE CI SIANO ALMENO 2/3 PLAYER.
-        if (player.listIpPlayer.size() < 3) {
-            System.out.println("Non ci sono abbstanza giocatori. MI CHIUDO");
-            System.exit(0);
-        }
+        greenAvatar((player.listIpPlayer.indexOf(uno.giocatoreTurno)));
 
         // riparte
         try {
