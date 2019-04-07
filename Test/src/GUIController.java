@@ -496,7 +496,15 @@ public class GUIController extends VBox {
                 ArrayList<String> arr = null;
                 try {
                     arr = player.peekCardPlayer(uno, n);
+                    if( n==2 || n==4) {
+                        VBox v = (VBox) gameScene.lookup("#avatar"+player.listIpPlayer.indexOf(uno.giocatoreTurno));
+                        Circle c = (Circle) gameScene.lookup("#turn");
+                        v.getChildren().remove(c);
+                        player.skipTurn(uno);
+                    }
+
                     uno.pescato = true;
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -587,6 +595,7 @@ public class GUIController extends VBox {
     void removeGreenAvatar(int pos) {
         VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
         Circle c = (Circle) gameScene.lookup("#turn");
+        System.out.println("\nvBox id: "+vBox.getId()+"\n");
         Platform.runLater(()-> {
                     vBox.getChildren().remove(c);
         });
@@ -602,8 +611,15 @@ public class GUIController extends VBox {
         stub = (PlayerInterface) Naming.lookup("rmi://"+ uno.giocatoreTurno + "/ciao");
 
         if (!uno.isMyTurn) {
-            pingTimer = new Timer();
-            pingTimer.schedule(new Ping(pingTimer, stub, this), 3000, 1000);
+            try {
+                stub.ping();
+                pingTimer = new Timer();
+                System.out.println("\nBefore schedule in handlePingOnPlayerTurn\n");
+                pingTimer.schedule(new Ping(pingTimer, stub, this), 0, 1000);
+            } catch (Exception e) {
+                System.out.println("Il giocatore si è disconnesso in PING");
+                bar();
+            }
         }
     }
 
@@ -660,14 +676,41 @@ public class GUIController extends VBox {
         System.out.println("prima c'erano "+player.listIpPlayer.size());
         player.listIpPlayer.remove(playerDead);
         System.out.println("ora ce ne sono "+player.listIpPlayer.size());
-
+        System.out.println("\nPre bar()\n");
         greenAvatar((player.listIpPlayer.indexOf(uno.giocatoreTurno)));
-
+        System.out.println("Post bar()\n");
         // riparte
         try {
             handlePingOnPlayerTurn();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    void pingNotTurnPlayer () throws Exception{
+        System.out.println("\nStart pingNotTurnPlayer\n");
+        ArrayList<String> tmpListIp = new ArrayList<>();
+        for(int i = 0; i<player.listIpPlayer.size(); i++) {
+            System.out.println("\nip: "+player.listIpPlayer.get(i)+"\n");
+            if(!player.listIpPlayer.get(i).equals(uno.giocatoreTurno)) {
+                System.out.println("\nDentro if\nip: "+player.listIpPlayer.get(i)+"\n");
+                try {
+                    stub = (PlayerInterface) Naming.lookup("rmi://" + player.listIpPlayer.get(i) + "/ciao");
+                    stub.ping();
+                } catch (Exception e) {
+//                    removeGreenAvatar(player.listIpPlayer.indexOf(player.listIpPlayer.get(i)));
+                    redAvatar(player.listIpPlayer.indexOf(player.listIpPlayer.get(i)));
+                    updateAvatarTextPos(player.listIpPlayer.indexOf(player.listIpPlayer.get(i)));
+                    System.out.println("Un player di cui non era il turno è caduto");
+                    continue;
+                }
+            }
+            tmpListIp.add(player.listIpPlayer.get(i));
+        }
+        player.listIpPlayer = tmpListIp;
+        System.out.println("Updated listIpPlayer\n");
+        for (String item : player.listIpPlayer){
+            System.out.println(item+"\n");
         }
     }
 }

@@ -26,6 +26,6 @@ public class Ping extends TimerTask {
             mioController.bar();
         }
 
-        System.out.println("response: " + response);
+//        System.out.println("response: " + response);
     }
 }

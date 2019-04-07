@@ -73,6 +73,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
             }
             mioController.handlePingOnPlayerTurn();
+            mioController.pingNotTurnPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,6 +117,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
                 System.out.println("Non è il mio turno");
             }
             mioController.handlePingOnPlayerTurn();
+            mioController.pingNotTurnPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }

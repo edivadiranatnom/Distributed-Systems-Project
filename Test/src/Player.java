@@ -64,11 +64,10 @@ public class Player {
     }
 
     void killServerFor(String serverIp) throws Exception {
-        ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://" + serverIp + "/connection");
         try {
+            ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://" + serverIp + "/connection");
             stub.kill();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     Game distribute(Game uno) throws Exception {
@@ -81,8 +80,10 @@ public class Player {
             for (int j = 0; j < 7; j++) {
                 playersCards.add(uno.mazzo.pop());
             }
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            stubPlayer.cardDistribution(playersCards);
+            try {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.cardDistribution(playersCards);
+            }catch (Exception e){}
             ArrayList<String> tuple = new ArrayList<>();
             tuple.add("7");
             tuple.add(i % nPlayers + ".png");
@@ -104,8 +105,10 @@ public class Player {
         uno.giocatoreTurno = listIpPlayer.get((myIndex+1)%nPlayers);
 
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            stubPlayer.preStartGame(uno);
+            try {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.preStartGame(uno);
+            }catch (Exception e){}
         }
         return uno;
     }
@@ -133,12 +136,16 @@ public class Player {
             }
             System.out.println("Sono in p.c. ora il turno è di: " + listIpPlayer.indexOf(uno.giocatoreTurno));
             for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                stubPlayer.communicationTurn(uno);
+                try {
+                    stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                    stubPlayer.communicationTurn(uno);
+                }catch (Exception e){}
             }
             for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                stubPlayer.communicationCard(uno, cartagiocata);
+                try {
+                    stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                    stubPlayer.communicationCard(uno, cartagiocata);
+                }catch (Exception e){}
             }
         } else {
             if (uno.peekScarti().card == 10) {
@@ -168,13 +175,17 @@ public class Player {
                 }            }
             System.out.println("Sono in p.c. ora il turno è di: "+listIpPlayer.indexOf(uno.giocatoreTurno));
             for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                stubPlayer.communicationTurn(uno);
+                try {
+                    stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                    stubPlayer.communicationTurn(uno);
+                }catch (Exception e){}
             }
 
             for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
-                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-                stubPlayer.communicationCard(uno, cartagiocata);
+                try {
+                    stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                    stubPlayer.communicationCard(uno, cartagiocata);
+                }catch (Exception e){}
             }
         }
     }
@@ -192,8 +203,10 @@ public class Player {
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(myIp);
         for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            stubPlayer.removeDrawedCard(uno, myIp, cartePescate);
+            try {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.removeDrawedCard(uno, myIp, cartePescate);
+            }catch (Exception e){}
         }
         ArrayList<String> arr = new ArrayList<>();
         arr.add(myIp);
@@ -217,8 +230,10 @@ public class Player {
         }
         System.out.println("Sono in p.c. ora il turno è di: "+listIpPlayer.indexOf(uno.giocatoreTurno));
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            stubPlayer.communicationTurn(uno);
+            try {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.communicationTurn(uno);
+            }catch (Exception e){}
         }
     }
 
@@ -228,8 +243,10 @@ public class Player {
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(myIp);
         for (int i = myIndex + 1; i < nPlayers + myIndex + 1; i++) {
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            stubPlayer.updateCards(uno, myIp);
+            try {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                stubPlayer.updateCards(uno, myIp);
+            }catch (Exception e){}
         }
     }
 
@@ -237,9 +254,11 @@ public class Player {
         int nPlayers = listIpPlayer.size();
         int myIndex = listIpPlayer.indexOf(uno.giocatoreTurno);
         for (int i = myIndex + 1; i < nPlayers + myIndex; i++) {
-            stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
-            System.out.println("\nLOSER in terminate\n");
-            stubPlayer.loser(res);
+            try {
+                stubPlayer = (PlayerInterface) Naming.lookup("rmi://" + listIpPlayer.get(i % nPlayers) + "/ciao");
+                System.out.println("\nLOSER in terminate\n");
+                stubPlayer.loser(res);
+            }catch (Exception e){}
         }
     }
 }
