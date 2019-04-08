@@ -49,16 +49,15 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         mioController.uno.pushScarti(uno.peekScarti());
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         mioController.uno.NumberAllPlayersCards = uno.NumberAllPlayersCards;
-
         for (String item : listIpPlayer) {
             mioController.createAvatar(item, listIpPlayer.indexOf(item));
             if((utility.findIp()+":"+mioController.player.portRegistry).equals(item)) {
                 System.out.println("\npreStartGame avatar" + listIpPlayer.indexOf(item)+"\n");
-                VBox v = (VBox) mioController.gameScene.lookup("#avatar" + listIpPlayer.indexOf(item));
-                v.setStyle("-fx-border-width: 2px; -fx-border-color: grey; -fx-border-radius: 50px");
+                //VBox v = (VBox) mioController.gameScene.lookup("#avatar" + listIpPlayer.indexOf(item));
+                //v.setStyle("-fx-border-width: 2px; -fx-border-color: grey; -fx-border-radius: 50px");
             }
         }
-        mioController.greenAvatar(0);
+        //mioController.greenAvatar(listIpPlayer.get(0));
 
         mioController.uno.currentColor = uno.currentColor;
         try {
@@ -73,7 +72,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
             }
             mioController.handlePingOnPlayerTurn();
-            mioController.pingNotTurnPlayer();
+            //mioController.pingNotTurnPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,9 +103,8 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void communicationTurn (Game uno) {
         System.out.println("E' il turno di: "+uno.giocatoreTurno);
-        mioController.removeGreenAvatar(listIpPlayer.indexOf(mioController.uno.giocatoreTurno));
+        mioController.removeGreenAvatar(mioController.uno.giocatoreTurno);
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
-        mioController.greenAvatar(listIpPlayer.indexOf(mioController.uno.giocatoreTurno));
         try {
             if (uno.giocatoreTurno.equals(utility.findIp()+":"+mioController.player.portRegistry)) {
 
@@ -116,8 +114,10 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
                 mioController.uno.isMyTurn = false;
                 System.out.println("Non è il mio turno");
             }
-            mioController.handlePingOnPlayerTurn();
-            mioController.pingNotTurnPlayer();
+            if(mioController.handlePingOnPlayerTurn()){
+                mioController.greenAvatar(mioController.uno.giocatoreTurno);
+            }
+            //mioController.pingNotTurnPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }
