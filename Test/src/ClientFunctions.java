@@ -72,14 +72,13 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
             }
             mioController.handlePingOnPlayerTurn();
-            //mioController.pingNotTurnPlayer();
+            mioController.pingNotTurnPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public void communicationCard(Game uno, Card cartaGiocata) {
         mioController.uno.pushScarti(cartaGiocata);
-        mioController.uno.giroOrario = uno.giroOrario;
         mioController.uno.currentColor = uno.currentColor;
         String rgb = "";
         if(mioController.uno.currentColor.equals("red")) rgb = "#FF5555";
@@ -103,6 +102,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
 
     public void communicationTurn (Game uno) {
         System.out.println("E' il turno di: "+uno.giocatoreTurno);
+        mioController.uno.giroOrario = uno.giroOrario;
         mioController.removeGreenAvatar(mioController.uno.giocatoreTurno);
         mioController.uno.giocatoreTurno = uno.giocatoreTurno;
         try {
@@ -117,7 +117,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
             if(mioController.handlePingOnPlayerTurn()){
                 mioController.greenAvatar(mioController.uno.giocatoreTurno);
             }
-            //mioController.pingNotTurnPlayer();
+            mioController.pingNotTurnPlayer();
         } catch (Exception e) {
             e.printStackTrace();
         }

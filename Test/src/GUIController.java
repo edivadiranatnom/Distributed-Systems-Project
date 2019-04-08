@@ -614,7 +614,7 @@ public class GUIController extends VBox {
         Circle c = (Circle) gameScene.lookup("#turn");
         System.out.println("\nvBox id: "+vBox.getId()+"\n");
         Platform.runLater(()-> {
-                    vBox.getChildren().remove(c);
+            vBox.getChildren().remove(c);
         });
     }
 
@@ -696,11 +696,12 @@ public class GUIController extends VBox {
         player.listIpPlayer.remove(playerDead);
         System.out.println("ora ce ne sono "+player.listIpPlayer.size());
         System.out.println("\nPre bar()\n");
-        greenAvatar(uno.giocatoreTurno);
         System.out.println("Post bar()\n");
         // riparte
         try {
-            handlePingOnPlayerTurn();
+            if(handlePingOnPlayerTurn()) {
+                greenAvatar(uno.giocatoreTurno);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
