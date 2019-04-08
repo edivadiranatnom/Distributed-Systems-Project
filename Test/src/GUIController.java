@@ -123,7 +123,7 @@ public class GUIController extends VBox {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
+                removeGreenAvatar(uno.giocatoreTurno);
 
                 if (uno.pescato){
                     Button b = (Button) gameScene.lookup("#skipAction");
@@ -435,21 +435,42 @@ public class GUIController extends VBox {
         });
     }
 
+    String sanitizeIp(String ip) {
+        ip = ip.replace(".","");
+        ip = ip.replace(":","");
+        return ip;
+    }
+
     @FXML
     void createAvatar(String ip, int pos){
+        String ip2 = sanitizeIp(ip);
         Platform.runLater(()-> {
             String[] parts = ip.split(":");
             String secondPart = parts[1];
             Image image = new Image("img/avatar/" + uno.NumberAllPlayersCards.get(ip).get(1));
             VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+            vBox.setId(ip2);
+            VBox vBox1 = (VBox) gameScene.lookup("#" + ip2);
+            try {
+                if (ip.equals(utility.findIp()+":"+player.portRegistry)) {
+                    vBox1.setStyle("-fx-border-width: 2px; -fx-border-color: grey; -fx-border-radius: 50px");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("ip in create avatar" + vBox1.getId());
+            if(pos ==0){
+                greenAvatar(player.listIpPlayer.get(0));
+            }
             vBox.setAlignment(Pos.BOTTOM_CENTER);
             BackgroundSize backgroundSize = new BackgroundSize(50, 50, false, false, false, false);
             Background background = new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize));
-            Text host = new Text("PORT: " + secondPart);
+            Text host = new Text("PORT: " + ip);
+            //host.setId(ip);
             host.setFont(Font.font("Roboto", 11));
             Text remainingCards = new Text("CARDS: " + uno.NumberAllPlayersCards.get(ip).get(0));
             remainingCards.setFont(Font.font("Roboto", 11));
-            remainingCards.setId("player_"+pos);
+            remainingCards.setId("player_"+ip2);
             host.setFill(Color.WHITE);
             remainingCards.setFill(Color.WHITE);
             vBox.setBackground(background);
@@ -460,8 +481,9 @@ public class GUIController extends VBox {
 
     @FXML
     void updateAvatar(int n, String player, int pos){
+        String ip2 = sanitizeIp(player);
         int aggiorna = Integer.parseInt(uno.NumberAllPlayersCards.get(player).get(0));
-        Text txt = (Text) gameScene.lookup("#player_"+pos);
+        Text txt = (Text) gameScene.lookup("#player_"+ip2);
         txt.setText("CARDS: " + String.valueOf(aggiorna));
     }
 
@@ -497,7 +519,8 @@ public class GUIController extends VBox {
                 try {
                     arr = player.peekCardPlayer(uno, n);
                     if( n==2 || n==4) {
-                        VBox v = (VBox) gameScene.lookup("#avatar"+player.listIpPlayer.indexOf(uno.giocatoreTurno));
+                        String ip2 = sanitizeIp(uno.giocatoreTurno);
+                        VBox v = (VBox) gameScene.lookup("#"+ip2);
                         Circle c = (Circle) gameScene.lookup("#turn");
                         v.getChildren().remove(c);
                         player.skipTurn(uno);
@@ -509,7 +532,7 @@ public class GUIController extends VBox {
                     e.printStackTrace();
                 }
                 updateAvatar(Integer.parseInt(arr.get(1)), arr.get(0), player.listIpPlayer.indexOf(arr.get(0)));
-            });
+        });
 
         } else {
             if (uno.pescato) {
@@ -535,7 +558,7 @@ public class GUIController extends VBox {
                 Button b = (Button) gameScene.lookup("#skipAction");
                 outerTable.getChildren().remove(b);
                 uno.pescato = false;
-                removeGreenAvatar(player.Client.listIpPlayer.indexOf(uno.giocatoreTurno));
+                removeGreenAvatar(uno.giocatoreTurno);
                 player.skipTurn(uno);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -551,49 +574,43 @@ public class GUIController extends VBox {
         }
     }
 
-    void greenAvatar(int pos) {
-        VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+    void greenAvatar(String ip) {
+        String ip2 = sanitizeIp(ip);
+        System.out.println("ip2 :"+ip2);
+        VBox vBox = (VBox) gameScene.lookup("#"+ ip2);
         Circle circle = new Circle(5.0f);
         circle.setFill(Color.rgb(0,255,127));
         circle.setId("turn");
         circle.setCenterY(0.0);
+        System.out.println("vbox in g.a."+vBox);
+        System.out.println("ip in g.a."+vBox.getId());
         Platform.runLater(()-> {
             vBox.getChildren().add(circle);
         });
     }
 
-    void redAvatar(int pos) {
-        System.out.println("E' morto l'avatar in posizione "+pos);
-        VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+    void redAvatar(String ip) {
+        String ip2 = sanitizeIp(ip);
+        VBox vBox = (VBox) gameScene.lookup("#" + ip2);
         Circle circle = new Circle(5.0f);
         circle.setFill(Color.rgb(255,0,0));
-        circle.setId("circle_death_"+pos);
+        circle.setId("circle_death_"+ip2);
         circle.setCenterY(0.0);
         Platform.runLater(()-> {
             vBox.getChildren().add(circle);
         });
-        vBox.setId("death"+pos);
-        for (int i = 0; i<player.listIpPlayer.size(); i++) {
-            if(i>pos) {
-                VBox tmp = (VBox) gameScene.lookup("#avatar" + i);
-                tmp.setId("avatar"+(i-1));
-            }
-        }
     }
 
-    void updateAvatarTextPos(int pos) {
-        Text txt = (Text) gameScene.lookup("#player_" + pos);
-        txt.setId("death_text"+pos);
-        for (int i = 0; i<player.listIpPlayer.size(); i++) {
-            if(i>pos) {
-                Text tmp = (Text) gameScene.lookup("#player_" + i);
-                tmp.setId("player_"+(i-1));
-            }
-        }
+    void updateAvatarTextPos(String ip) {
+        String ip2 = sanitizeIp(ip);
+        Text txt = (Text) gameScene.lookup("#player_" + ip2);
+        txt.setId("death_text"+ip2);
+
     }
 
-    void removeGreenAvatar(int pos) {
-        VBox vBox = (VBox) gameScene.lookup("#avatar" + pos);
+    void removeGreenAvatar(String ip) {
+        String ip2 = sanitizeIp(ip);
+        VBox vBox = (VBox) gameScene.lookup("#" + ip2);
         Circle c = (Circle) gameScene.lookup("#turn");
         System.out.println("\nvBox id: "+vBox.getId()+"\n");
         Platform.runLater(()-> {
@@ -601,17 +618,17 @@ public class GUIController extends VBox {
         });
     }
 
-    void handlePingOnPlayerTurn () throws Exception{
+    boolean handlePingOnPlayerTurn () throws Exception{
         try {
             pingTimer.cancel();
             pingTimer.purge();
         } catch (Exception e) {
             //e.printStackTrace();
         }
-        stub = (PlayerInterface) Naming.lookup("rmi://"+ uno.giocatoreTurno + "/ciao");
 
         if (!uno.isMyTurn) {
             try {
+                stub = (PlayerInterface) Naming.lookup("rmi://"+ uno.giocatoreTurno + "/ciao");
                 stub.ping();
                 pingTimer = new Timer();
                 System.out.println("\nBefore schedule in handlePingOnPlayerTurn\n");
@@ -619,8 +636,10 @@ public class GUIController extends VBox {
             } catch (Exception e) {
                 System.out.println("Il giocatore si è disconnesso in PING");
                 bar();
+                return false;
             }
         }
+        return true;
     }
 
     void bar() {
@@ -638,14 +657,14 @@ public class GUIController extends VBox {
         String playerDead = uno.giocatoreTurno;
 
         // CONTROLLO CHE CI SIANO ALMENO 2/3 PLAYER.
-        if (player.listIpPlayer.size() < 3) {
+        if (player.listIpPlayer.size() < 4) {
             System.out.println("Non ci sono abbstanza giocatori. MI CHIUDO");
             System.exit(0);
         }
 
-        removeGreenAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // tolgo il pallino verde a quello che è caduto
-        redAvatar(player.listIpPlayer.indexOf(uno.giocatoreTurno)); // aggiungo il pallino rosso a quello che è caduto
-        updateAvatarTextPos(player.listIpPlayer.indexOf(uno.giocatoreTurno)); //aggiorno l'id del testo degli avatar
+        removeGreenAvatar(uno.giocatoreTurno); // tolgo il pallino verde a quello che è caduto
+        redAvatar(uno.giocatoreTurno); // aggiungo il pallino rosso a quello che è caduto
+        //updateAvatarTextPos(player.listIpPlayer.indexOf(uno.giocatoreTurno)); //aggiorno l'id del testo degli avatar
         int nPlayers = player.listIpPlayer.size();
         int myIndex = player.listIpPlayer.indexOf(uno.giocatoreTurno);
         if (uno.giroOrario) {
@@ -677,7 +696,7 @@ public class GUIController extends VBox {
         player.listIpPlayer.remove(playerDead);
         System.out.println("ora ce ne sono "+player.listIpPlayer.size());
         System.out.println("\nPre bar()\n");
-        greenAvatar((player.listIpPlayer.indexOf(uno.giocatoreTurno)));
+        greenAvatar(uno.giocatoreTurno);
         System.out.println("Post bar()\n");
         // riparte
         try {
@@ -699,8 +718,8 @@ public class GUIController extends VBox {
                     stub.ping();
                 } catch (Exception e) {
 //                    removeGreenAvatar(player.listIpPlayer.indexOf(player.listIpPlayer.get(i)));
-                    redAvatar(player.listIpPlayer.indexOf(player.listIpPlayer.get(i)));
-                    updateAvatarTextPos(player.listIpPlayer.indexOf(player.listIpPlayer.get(i)));
+                    redAvatar(player.listIpPlayer.get(i));
+                    updateAvatarTextPos(player.listIpPlayer.get(i));
                     System.out.println("Un player di cui non era il turno è caduto");
                     continue;
                 }
