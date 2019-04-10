@@ -57,6 +57,7 @@ public class GUIController extends VBox {
     Button skip;
     @FXML
     Pane outerTable;
+    private boolean buttonDistributionDrawed = false;
 
     public void terminate(String res){
         try {
@@ -228,8 +229,17 @@ public class GUIController extends VBox {
             gameStage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 
             gameStage.hide();
+            gameStage.setScene(gameScene);
+            gameStage.show();
+        } else {
+            result.setText("Error");
+        }
+    }
 
-            if (player.Client.iamleader) {
+    @FXML
+    public void distButton(){
+        if (!buttonDistributionDrawed) {
+            Platform.runLater(() -> {
                 Button btn = new Button("Distribuisci");
                 btn.setLayoutX(400.0);
                 btn.setLayoutY(150.0);
@@ -245,11 +255,8 @@ public class GUIController extends VBox {
                 });
 
                 table.getChildren().add(btn);
-            }
-            gameStage.setScene(gameScene);
-            gameStage.show();
-        } else {
-            result.setText("Error");
+            });
+            buttonDistributionDrawed = true;
         }
     }
 

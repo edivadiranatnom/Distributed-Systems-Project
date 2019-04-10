@@ -35,6 +35,7 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         if ((ip).equals(leader)) {
             System.out.println("io sono il leader: " + leader);
             this.iamleader = true;
+            mioController.distButton();
         } else {
             System.out.println("il leader è: " + leader);
         }

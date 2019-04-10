@@ -49,11 +49,12 @@ public class Player {
         // client service
         String responseIpLeader = null;
         try {
+            Client.mioController = gc;
             ConnectionInterface stub = (ConnectionInterface) Naming.lookup("rmi://" + host + ":1099" +"/connection");
             responseIpLeader = stub.connect(ip);
             listIpPlayer.clear();
             listIpPlayer = Client.listIpPlayer;
-            Client.mioController = gc;
+
         } catch (Exception e) {
             System.err.println("Player exception: " + e.toString());
             e.printStackTrace();
