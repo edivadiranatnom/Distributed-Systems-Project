@@ -56,7 +56,6 @@ public class Connection extends UnicastRemoteObject implements ConnectionInterfa
                 System.out.println("Ho chiamato la getIp su Player: "+ listIp.get(i));
                 //Il leader è sempre il primo e affamok
                 stub.setLeader(listIp.get(0), listIp.get(i));
-
 //                // entra solo n-esimo player che lancia l'elezione del leader
 //                if (max) {
 //                    //stub.setLeader(leader);

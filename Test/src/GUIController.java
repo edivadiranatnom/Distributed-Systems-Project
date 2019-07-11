@@ -218,7 +218,7 @@ public class GUIController extends VBox {
 
         player = new Player();
         uno = new Game();
-        if ((inputIp.getText() != null && !inputIp.getText().isEmpty() && (inputIp.getText().contains("192.168") || inputIp.getText().contains("10.") || inputIp.getText().contains("172.")))) {
+        if ((inputIp.getText() != null && !inputIp.getText().isEmpty() && (inputIp.getText().contains("192.168") || inputIp.getText().contains("130.") || inputIp.getText().contains("10.") || inputIp.getText().contains("172.")))) {
             uno = player.startPlayer(inputIp.getText(), this);
             result.setText("Connected");
             gameLoader = new FXMLLoader(getClass().getResource("Game.fxml"));
