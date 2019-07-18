@@ -533,7 +533,11 @@ public class GUIController extends VBox {
                         player.skipTurn(uno);
                     }
 
-                    uno.pescato = true;
+                    if (n == 1) {
+                        uno.pescato = true;
+                    } else {
+                        uno.pescato = false;
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
