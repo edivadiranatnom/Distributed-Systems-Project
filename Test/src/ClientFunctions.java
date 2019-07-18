@@ -29,13 +29,15 @@ public class ClientFunctions extends UnicastRemoteObject implements PlayerInterf
         System.out.println("-------------------------");
     }
 
-    public void setLeader(String leader, String myIp) throws Exception {
+    public void setLeader(String leader, String myIp, boolean drawButDist) throws Exception {
         String ip = myIp;
         this.leader = leader;
         if ((ip).equals(leader)) {
             System.out.println("io sono il leader: " + leader);
             this.iamleader = true;
-            mioController.distButton();
+            if (drawButDist) {
+                mioController.distButton();
+            }
         } else {
             System.out.println("il leader è: " + leader);
         }

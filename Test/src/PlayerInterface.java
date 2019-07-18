@@ -5,7 +5,7 @@ import UnoGame.*;
 public interface PlayerInterface extends Remote {
     void setIp(ArrayList<String> ip) throws Exception;
 
-    void setLeader(String leader, String myIp) throws Exception;
+    void setLeader(String leader, String myIp, boolean drawButDist) throws Exception;
 
     void cardDistribution(ArrayList<Card> playersCards) throws Exception;
 
