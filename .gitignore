@@ -5,6 +5,7 @@ SSHConnect/
 Distributed-Systems-Project.iml
 Server.iml
 *.suo
+out/
 *.ntvs*
 *.njsproj
 *.sln

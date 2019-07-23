@@ -15,6 +15,7 @@ public class Game implements Serializable {
     public ArrayList<Card> MyCard = new ArrayList<>();
     public HashMap<String, ArrayList<String>> NumberAllPlayersCards = new HashMap<>();
     private String leader;
+    public boolean gameStarted = false;
 
     public Game() {
         mazzo = new Deck();

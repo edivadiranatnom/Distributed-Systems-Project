@@ -238,7 +238,7 @@ public class GUIController extends VBox {
 
     @FXML
     public void distButton(){
-        if (!buttonDistributionDrawed) {
+        if (!buttonDistributionDrawed && !uno.gameStarted) {
             Platform.runLater(() -> {
                 Button btn = new Button("Distribuisci");
                 btn.setLayoutX(400.0);
